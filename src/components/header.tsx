@@ -1,5 +1,3 @@
-// src/components/header.tsx
-
 "use client";
 
 import { useState } from 'react';

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from '../components/header';
 import Link from "next/link";
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
@@ -18,19 +17,16 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <Header />
-      <main className={styles.main}>
-        {videoUrl && (
-          <video className={styles.backgroundVideo} autoPlay loop muted>
-            <source src={videoUrl} type="video/mp4" />
-          </video>
-        )}
-        <Link href="/second-page">
-          <button className={styles.button}>Go to Second Page</button>
-        </Link>
-      </main>
-    </>
+    <main className={styles.main}>
+      {videoUrl && (
+        <video className={styles.backgroundVideo} autoPlay loop muted>
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      )}
+      <Link href="/second-page">
+        <button className={styles.button}>Go to Second Page</button>
+      </Link>
+    </main>
   );
 };
 

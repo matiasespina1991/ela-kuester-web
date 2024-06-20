@@ -1,13 +1,11 @@
-// src/pages/second-page.tsx
-
 "use client";
 
 import Link from "next/link";
-import styles from "../app/page.module.css";
-import { db, collection, getDocs } from "../utils/firebase";
-import Header from "@/components/header";
+import styles from "../page.module.css";
+import { db, collection, getDocs } from "../../utils/firebase";
+import Header from "../../components/header";
 
-export default function SecondPage() {
+const SecondPage = () => {
   const fetchPhotos = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "photos"));
@@ -31,4 +29,6 @@ export default function SecondPage() {
       </main>
     </>
   );
-}
+};
+
+export default SecondPage;

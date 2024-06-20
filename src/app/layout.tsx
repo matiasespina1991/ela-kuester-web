@@ -1,5 +1,7 @@
+import Header from "@/components/header";
 import type { Metadata } from "next";
 import localFont from 'next/font/local';
+
 
 
 const neueHaasDisplay = localFont({
@@ -35,7 +37,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={neueHaasDisplay.className}>{children}</body>
+      <body className={neueHaasDisplay.className}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }

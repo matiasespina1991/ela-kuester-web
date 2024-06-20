@@ -5,8 +5,10 @@
 # Nombres de los archivos del proyecto Next.js
 files=(
     "src/app/page.tsx"
+    "src/app/layout.tsx"
     "src/pages/second-page.tsx"
     "src/components/header.tsx"
+    "src/styles/globals.css"
 )
 
 # Archivo de salida
