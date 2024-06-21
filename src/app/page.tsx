@@ -19,7 +19,7 @@ const Home: React.FC = () => {
   return (
     <main className={styles.main}>
       {videoUrl && (
-        <video className={styles.backgroundVideo} autoPlay loop muted>
+        <video className={styles.backgroundVideo} autoPlay loop muted playsInline>
           <source src={videoUrl} type="video/mp4" />
         </video>
       )}
