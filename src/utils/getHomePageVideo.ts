@@ -18,6 +18,8 @@ export const getHomePageVideo = async (): Promise<string> => {
     if (querySnapshot.empty) {
       console.error("No home page video found");
       return '';
+    } else if (querySnapshot.size >= 1) {
+      console.log(`Found ${querySnapshot.size} home page videos, using the first one`);
     }
 
     querySnapshot.forEach((doc) => {
