@@ -2,6 +2,9 @@ import { db, collection, getDocs, query, where, orderBy, limit } from "./firebas
 
 export const getHomePageVideo = async (): Promise<string> => {
   try {
+    
+    console.log('Getting home page video...')
+
     const q = query(
       collection(db, "home_page_video"),
       where("use", "==", true),
@@ -11,6 +14,11 @@ export const getHomePageVideo = async (): Promise<string> => {
 
     const querySnapshot = await getDocs(q);
     let videoUrl = '';
+
+    if (querySnapshot.empty) {
+      console.error("No home page video found");
+      return '';
+    }
 
     querySnapshot.forEach((doc) => {
       videoUrl = doc.data().video_url;
