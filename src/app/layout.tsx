@@ -1,6 +1,7 @@
 import Header from "@/components/header";
 import type { Metadata } from "next";
 import localFont from 'next/font/local';
+import AnimatedCursor from "react-animated-cursor";
 
 
 
@@ -38,6 +39,24 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={neueHaasDisplay.className}>
+            <AnimatedCursor
+          innerSize={10}
+          outerSize={45}
+          innerScale={1}
+          outerScale={2}
+          outerAlpha={0}
+          trailingSpeed={10}
+          innerStyle={{
+            backgroundColor: 'white',
+            filter: 'opacity(0.9)',
+            backdropFilter: 'invert(1)',
+            zIndex: 1000,
+          }}
+          outerStyle={{
+            backdropFilter: 'invert(1)',
+            zIndex: 1000,
+          }}
+        />
         <Header />
         {children}
       </body>

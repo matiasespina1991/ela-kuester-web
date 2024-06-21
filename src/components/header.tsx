@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
+import AnimatedCursor from 'react-animated-cursor';
 
 const Header: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -23,6 +24,30 @@ const Header: React.FC = () => {
   return (
     <>
       <nav className={`${styles.nav} ${isOpen ? styles.active : ''}`}>
+
+        {
+isOpen && (
+  <AnimatedCursor
+          innerSize={10}
+          outerSize={45}
+          innerScale={1}
+          outerScale={2}
+          outerAlpha={0}
+          trailingSpeed={10}
+          innerStyle={{
+            backgroundColor: 'transparent',
+            filter: 'opacity(0.9)',
+            backdropFilter: 'invert(1)',
+            zIndex: 1000,
+          }}
+          outerStyle={{
+            backdropFilter: 'invert(1)',
+            zIndex: 1000,
+          }}
+        />
+)
+        }
+            
         <div className={styles.navContent}>
           <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite ? styles.forceWhite : ''}`}>
             Ela Kuester
