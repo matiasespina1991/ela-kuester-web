@@ -14,8 +14,6 @@ export const getHomePageVideo = async (): Promise<string> => {
       limit(1)
     );
 
-    console.log('Firebase project ID:', process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
-
     const querySnapshot = await getDocs(q);
     let videoUrl = '';
 
@@ -23,7 +21,7 @@ export const getHomePageVideo = async (): Promise<string> => {
       console.error("No home page video found");
       return '';
     } else if (querySnapshot.size >= 1) {
-      console.log(`Found ${querySnapshot.size} home page videos, using the first one`);
+      console.log("Video found");
     }
 
     querySnapshot.forEach((doc) => {
