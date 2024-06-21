@@ -23,9 +23,7 @@ const Home: React.FC = () => {
           <source src={videoUrl} type="video/mp4" />
         </video>
       )}
-      <Link href="/second-page">
-        <button className={styles.button}>Go to Second Page</button>
-      </Link>
+      
     </main>
   );
 };

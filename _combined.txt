@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header from '../components/header';
 import Link from "next/link";
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
@@ -18,26 +17,23 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <Header />
-      <main className={styles.main}>
-        {videoUrl && (
-          <video className={styles.backgroundVideo} autoPlay loop muted>
-            <source src={videoUrl} type="video/mp4" />
-          </video>
-        )}
-        <Link href="/second-page">
-          <button className={styles.button}>Go to Second Page</button>
-        </Link>
-      </main>
-    </>
+    <main className={styles.main}>
+      {videoUrl && (
+        <video className={styles.backgroundVideo} autoPlay loop muted>
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      )}
+      
+    </main>
   );
 };
 
 export default Home;
 
+import Header from "@/components/header";
 import type { Metadata } from "next";
 import localFont from 'next/font/local';
+
 
 
 const neueHaasDisplay = localFont({
@@ -73,47 +69,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={neueHaasDisplay.className}>{children}</body>
+      <body className={neueHaasDisplay.className}>
+        <Header />
+        {children}
+      </body>
     </html>
   );
 }
 
-// src/pages/second-page.tsx
-
 "use client";
 
 import Link from "next/link";
-import styles from "../app/page.module.css";
-import { db, collection, getDocs } from "../utils/firebase";
-import Header from "@/components/header";
+import styles from "../page.module.css";
+import { db, collection, getDocs } from "../../utils/firebase";
+import Header from "../../components/header";
 
-export default function SecondPage() {
-  const fetchPhotos = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, "photos"));
-      querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
-      });
-    } catch (error) {
-      console.error("Error fetching photos:", error);
-    }
-  };
+const Styling = () => {
+
 
   return (
     <>
       <Header />
       <main className={styles.main}>
-        <h1>Second Page</h1>
+        <h1>Styling</h1>
         <Link href="/">
           <button className={styles.button}>Go to Home</button>
         </Link>
-        <button className={styles.button} onClick={fetchPhotos}>Fetch Photos</button>
       </main>
     </>
   );
-}
+};
 
-// src/components/header.tsx
+export default Styling;
 
 "use client";
 
@@ -125,19 +112,101 @@ import styles from './header.module.css';
 const Header: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
 
+  const handleLinkClick = () => {
+    setOpen(false);
+  };
+
   return (
-    <nav className={styles.nav}>
-      <div className={styles.navContent}>
-        <Link href="/" className={styles.logo}>Ela Kuester</Link>
-        <div className={styles.hamburger}>
-          <Hamburger toggled={isOpen} toggle={setOpen} />
+    <>
+      <nav className={`${styles.nav} ${isOpen ? styles.active : ''}`}>
+        <div className={styles.navContent}>
+          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''}`}>
+            Ela Kuester
+          </Link>
+          <div className={styles.hamburger}>
+            <Hamburger color={isOpen ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+          </div>
         </div>
-      </div>
-    </nav>
+        <div className={styles.menu}>
+          <Link href="/styling" className={styles.menuItem} onClick={handleLinkClick}>Styling</Link>
+          <Link href="/fashion-show-production" className={styles.menuItem} onClick={handleLinkClick}>Fashion Show Production</Link>
+          <Link href="/art" className={styles.menuItem} onClick={handleLinkClick}>Art</Link>
+          <Link href="/contact" className={styles.menuItem} onClick={handleLinkClick}>Contact</Link>
+        </div>
+      </nav>
+    </>
   );
 };
 
 export default Header;
+
+/* src/components/header.module.css */
+
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  font-family: 'NeueHaasDisplay', sans-serif;
+}
+
+.navContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 1rem 2.3rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 1000;
+  color: var(--header-color, black); /* Color personalizable */
+  transition: color 0.3s ease; /* Para una transición suave del color */
+}
+
+.logoActive {
+  color: black !important; /* Color del logo cuando el menú está activo */
+}
+
+.hamburger {
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  color: var(--header-color, black); /* Color personalizable */
+}
+
+.menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: white;
+  right: 0;
+  transition: all ease 0.3s;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.menuItem {
+  margin: 1rem 0;
+  font-size: 2rem;
+  text-decoration: none;
+  color: black;
+}
+
+.nav.active .menu {
+  opacity: 1;
+  pointer-events: all;
+}
 
 :root {
   --max-width: 1100px;

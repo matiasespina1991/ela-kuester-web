@@ -1,33 +1,71 @@
 /* src/components/header.module.css */
 
-
 .nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    font-family: 'NeueHaasDisplay', sans-serif;
-   
-  }
-  
-  .navContent {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 auto;
-    padding: 2rem 2.3rem;
-  }
-  
-  .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    color: white;
-  }
-  
-  .hamburger {
-    display: flex;
-    align-items: center;
-    color: white;
-  }
-  
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  font-family: 'NeueHaasDisplay', sans-serif;
+}
+
+.navContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 auto;
+  padding: 1rem 2.3rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 1000;
+  color: var(--header-color, black); /* Color personalizable */
+  transition: color 0.3s ease; /* Para una transición suave del color */
+}
+
+.logoActive {
+  color: black !important; /* Color del logo cuando el menú está activo */
+}
+
+.forceWhite {
+  color: white; 
+}
+
+.hamburger {
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+  color: var(--header-color, black); /* Color personalizable */
+}
+
+.menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 999;
+  background-color: white;
+  right: 0;
+  transition: all ease 0.3s;
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.menuItem {
+  margin: 1.2rem 0;
+  font-size: 1.5rem;
+  text-decoration: none;
+  color: black;
+}
+
+.nav.active .menu {
+  opacity: 1;
+  pointer-events: all;
+}
