@@ -2,6 +2,8 @@ import { db, collection, getDocs, query, where, orderBy, limit } from "./firebas
 
 export const getHomePageVideo = async (): Promise<string> => {
   try {
+
+    
     
     console.log('Getting home page video...')
 
@@ -11,6 +13,8 @@ export const getHomePageVideo = async (): Promise<string> => {
       orderBy("created_at", "desc"),
       limit(1)
     );
+
+    console.log('Firebase project ID:', process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
 
     const querySnapshot = await getDocs(q);
     let videoUrl = '';
