@@ -36,7 +36,7 @@ isOpen && (
           trailingSpeed={10}
           innerStyle={{
             backgroundColor: 'transparent',
-            filter: 'opacity(0.9)',
+            filter: 'opacity(1)',
             backdropFilter: 'invert(1)',
             zIndex: 1000,
           }}
