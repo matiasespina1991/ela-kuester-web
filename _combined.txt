@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
 
@@ -19,7 +19,7 @@ const Home: React.FC = () => {
   return (
     <main className={styles.main}>
       {videoUrl && (
-        <video className={styles.backgroundVideo} autoPlay loop muted>
+        <video className={styles.backgroundVideo} autoPlay loop muted playsInline>
           <source src={videoUrl} type="video/mp4" />
         </video>
       )}
@@ -29,6 +29,78 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
+"use client";
+
+import { useState, useEffect } from "react";
+import { Container, Typography, TextField, Button, Box, Alert } from "@mui/material";
+import { getSettings } from "../../utils/getSettings";
+import Header from "../../components/header";
+
+const Portfolio = () => {
+  const [settings, setSettings] = useState<any>(null);
+  const [password, setPassword] = useState<string>('');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const fetchedSettings = await getSettings();
+      setSettings(fetchedSettings);
+    };
+    fetchSettings();
+  }, []);
+
+  const handlePasswordSubmit = () => {
+    if (settings && settings.portfolio_password === password) {
+      setIsAuthenticated(true);
+      setError(null);
+    } else {
+      setError('Incorrect password. Please try again.');
+    }
+  };
+
+  return (
+    <>
+      <Header />
+      <Container maxWidth="md" sx={{ mt: 4,height: '100%',
+display: 'flex',
+flexDirection: 'column',
+justifyContent: 'center' }}>
+        {isAuthenticated ? (
+          <Box>
+            <Typography variant="h4">Welcome to the portfolio!</Typography>
+       
+          </Box>
+        ) : (
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ mt: 4 }}
+          >
+            <Typography sx={{fontFamily: 'monospace'}} >Insert password to access portfolio:</Typography>
+            <TextField
+              type="password"
+              value={password}
+              size="small"
+              onChange={(e) => setPassword(e.target.value)}
+              fullWidth
+              sx={{ my: 2, maxWidth: 300}}
+            />
+            <Button variant="contained" color="primary" onClick={handlePasswordSubmit}>
+              Submit
+            </Button>
+            {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+          </Box>
+        )}
+      </Container>
+    </>
+  );
+};
+
+export default Portfolio;
 
 import Header from "@/components/header";
 import type { Metadata } from "next";
@@ -68,8 +140,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={neueHaasDisplay.className}>
+    <html
+    style={{
+      height: '100%',
+    }}
+    lang="en">
+      <body
+      style={{height: '100%'}}
+      className={neueHaasDisplay.className}>
         <Header />
         {children}
       </body>
@@ -79,38 +157,21 @@ export default function RootLayout({
 
 "use client";
 
-import Link from "next/link";
-import styles from "../page.module.css";
-import { db, collection, getDocs } from "../../utils/firebase";
-import Header from "../../components/header";
-
-const Styling = () => {
-
-
-  return (
-    <>
-      <Header />
-      <main className={styles.main}>
-        <h1>Styling</h1>
-        <Link href="/">
-          <button className={styles.button}>Go to Home</button>
-        </Link>
-      </main>
-    </>
-  );
-};
-
-export default Styling;
-
-"use client";
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
 
 const Header: React.FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
+  const pathname = usePathname();
+  const [isWhite, setIsWhite] = useState<boolean>(false);
+
+  useEffect(() => {
+    const whiteRoutes = ['/'];
+    setIsWhite(whiteRoutes.includes(pathname));
+  }, [pathname]);
 
   const handleLinkClick = () => {
     setOpen(false);
@@ -120,17 +181,19 @@ const Header: React.FC = () => {
     <>
       <nav className={`${styles.nav} ${isOpen ? styles.active : ''}`}>
         <div className={styles.navContent}>
-          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''}`}>
+          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite ? styles.forceWhite : ''}`}>
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>
-            <Hamburger color={isOpen ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+            <Hamburger color={isOpen || !isWhite ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>
         <div className={styles.menu}>
-          <Link href="/styling" className={styles.menuItem} onClick={handleLinkClick}>Styling</Link>
-          <Link href="/fashion-show-production" className={styles.menuItem} onClick={handleLinkClick}>Fashion Show Production</Link>
+          <Link href="/" className={styles.menuItem} onClick={handleLinkClick}>Home</Link>
+          <Link href="/fashion" className={styles.menuItem} onClick={handleLinkClick}>Fashion</Link>
           <Link href="/art" className={styles.menuItem} onClick={handleLinkClick}>Art</Link>
+          <Link href="/portfolio" className={styles.menuItem} onClick={handleLinkClick}>Portfolio</Link>
+          <Link href="/about" className={styles.menuItem} onClick={handleLinkClick}>About</Link>
           <Link href="/contact" className={styles.menuItem} onClick={handleLinkClick}>Contact</Link>
         </div>
       </nav>
@@ -171,6 +234,10 @@ export default Header;
   color: black !important; /* Color del logo cuando el menú está activo */
 }
 
+.forceWhite {
+  color: white; 
+}
+
 .hamburger {
   display: flex;
   align-items: center;
@@ -197,8 +264,8 @@ export default Header;
 }
 
 .menuItem {
-  margin: 1rem 0;
-  font-size: 2rem;
+  margin: 1.2rem 0;
+  font-size: 1.5rem;
   text-decoration: none;
   color: black;
 }
@@ -407,6 +474,7 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
+  height: 100%;
 }
 
 body {

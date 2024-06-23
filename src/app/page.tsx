@@ -1,7 +1,7 @@
+// src/app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
 
@@ -23,7 +23,6 @@ const Home: React.FC = () => {
           <source src={videoUrl} type="video/mp4" />
         </video>
       )}
-      
     </main>
   );
 };

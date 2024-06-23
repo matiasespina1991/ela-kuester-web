@@ -1,8 +1,10 @@
-import Header from "@/components/header";
-import type { Metadata } from "next";
+// src/app/layout.tsx
+import { ReactNode } from "react";
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from '../theme/theme';
+import Header from "../components/header";
 import localFont from 'next/font/local';
-
-
 
 const neueHaasDisplay = localFont({
   src: [
@@ -25,21 +27,20 @@ const neueHaasDisplay = localFont({
   ]
 });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Ela Kuester",
   description: "Ela Kuester's online portfolio",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className={neueHaasDisplay.className}>
-        <Header />
-        {children}
+    <html style={{ height: '100%' }} lang="en">
+      <body style={{ height: '100%' }} className={neueHaasDisplay.className}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Header />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
