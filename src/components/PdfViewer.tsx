@@ -1,3 +1,5 @@
+"use client";
+
 import { Box } from '@mui/material';
 import React, { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
@@ -15,7 +17,6 @@ interface PdfViewerProps {
 
 const PdfViewer: React.FC<PdfViewerProps> = ({ fileUrl }) => {
   const [numPages, setNumPages] = useState<number>();
-  const [pageNumber, setPageNumber] = useState<number>(1);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
     setNumPages(numPages);
@@ -31,7 +32,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ fileUrl }) => {
         
         onLoadSuccess={onDocumentLoadSuccess}
       >
-        {/* <Page pageNumber={pageNumber} /> */}
 
         {Array.from(new Array(numPages), (el, index) => (
           <Page
