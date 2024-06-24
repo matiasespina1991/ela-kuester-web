@@ -1,4 +1,5 @@
-// src/app/layout.tsx
+import '../../pollyfills.js'
+
 import { ReactNode } from "react";
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
