@@ -5,7 +5,7 @@ export const getHomePageVideo = async (): Promise<string> => {
 
     
     
-    console.log('Getting home page video...')
+    console.log('Loading home page video...')
 
     const q = query(
       collection(db, "home_page_video"),
@@ -21,7 +21,7 @@ export const getHomePageVideo = async (): Promise<string> => {
       console.error("No home page video found");
       return '';
     } else if (querySnapshot.size >= 1) {
-      console.log("Video found");
+      console.log("Video loaded.");
     }
 
     querySnapshot.forEach((doc) => {
