@@ -5,7 +5,6 @@ import { Container, Typography, TextField, Button, Box, Alert } from "@mui/mater
 import { getSettings } from "../../utils/getSettings";
 import { getPortfolio } from "../../utils/getPortfolio";
 import Header from "../../components/header";
-// import PdfViewer from "../../components/PdfViewer";
 
 import dynamic from 'next/dynamic';
 
