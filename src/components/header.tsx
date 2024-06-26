@@ -29,7 +29,7 @@ const Header: React.FC = () => {
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>
-            <Hamburger color={isOpen || !isWhite ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>
         <div className={styles.menu}>

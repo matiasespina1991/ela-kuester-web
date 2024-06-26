@@ -69,3 +69,7 @@
   opacity: 1;
   pointer-events: all;
 }
+
+ .hamburger-react div {
+  height: 2px !important; 
+}
