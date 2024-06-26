@@ -10,7 +10,6 @@ const Art = () => {
 
   return (
     <>
-      <Header />
       <main className={styles.main}>
         <h1>Art</h1>
      

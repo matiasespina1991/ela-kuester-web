@@ -10,7 +10,6 @@ const About = () => {
 
   return (
     <>
-      <Header />
       <main className={styles.main}>
         <h1>About</h1>
         

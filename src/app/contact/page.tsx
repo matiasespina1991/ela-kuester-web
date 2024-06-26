@@ -10,7 +10,6 @@ const Contact = () => {
 
   return (
     <>
-      <Header />
       <main className={styles.main}>
         <h1>Contact</h1>
         

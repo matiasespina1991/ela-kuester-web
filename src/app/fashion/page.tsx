@@ -10,7 +10,6 @@ const Fashion = () => {
 
   return (
     <>
-      <Header />
       <main className={styles.main}>
         <h1>Fashion</h1>
        

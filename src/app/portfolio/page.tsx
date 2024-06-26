@@ -53,7 +53,6 @@ const Portfolio: React.FC = () => {
 
   return (
     <>
-      <Header />
       <Container sx={{ mt: 4, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
         {isAuthenticated ? (
           portfolioFile ? (
@@ -64,6 +63,7 @@ const Portfolio: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: '100%',
+                marginTop: '3rem',
               }}
             >
               <PdfViewer fileUrl={portfolioFile} />
