@@ -11,7 +11,7 @@ interface HeaderProps {
   videoLoaded: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
+const Header: React.FC<HeaderProps> = ({ videoLoaded = true }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
