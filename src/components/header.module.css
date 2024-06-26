@@ -18,6 +18,8 @@
 
 .logo {
   font-size: 1.75rem;
+  word-spacing: 0.9rem;
+  letter-spacing: -0.4rem;
   font-weight: normal;
   text-decoration: none;
   z-index: 1000;

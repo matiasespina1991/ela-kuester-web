@@ -43,9 +43,8 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
       <Header />
       <AnimatePresence mode="wait">
         <PageTransition>
-          <div style={{height: '100vh'}}>
             {children}
-          </div>
+        
         </PageTransition>
       </AnimatePresence>
     </ThemeProvider>

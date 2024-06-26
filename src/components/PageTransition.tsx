@@ -25,6 +25,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
       initial="hidden"
       animate="enter"
       exit="exit"
+      style={{ height: '100%'}}
     >
       {children}
     </motion.div>
