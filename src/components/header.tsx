@@ -7,7 +7,11 @@ import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  videoLoaded: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
@@ -29,11 +33,11 @@ const Header: React.FC = () => {
     <>
       <nav className={`${styles.nav} ${isOpen ? styles.active : ''}`}>
         <div className={styles.navContent}>
-          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite ? styles.forceWhite : ''}`}>
+          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite && videoLoaded ? styles.forceWhite : ''}`}>
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>
-            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>
         <div className={styles.menu}>

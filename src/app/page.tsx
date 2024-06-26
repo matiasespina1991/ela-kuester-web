@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
+import Header from "../components/header";
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
@@ -17,18 +18,21 @@ const Home: React.FC = () => {
     fetchVideo();
   }, []);
 
- const handleBackgroundVideoLoaded = () => {
+  const handleBackgroundVideoLoaded = () => {
     setBackgroundVideoLoaded(true);
- }  
+  };
 
   return (
-    <main className={styles.main}>
-      {videoUrl && (
-        <video onLoad={() => handleBackgroundVideoLoaded()} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
-          <source src={videoUrl} type="video/mp4" />
-        </video>
-      )}
-    </main>
+    <>
+      <Header videoLoaded={backgroundVideoLoaded} />
+      <main className={styles.main}>
+        {videoUrl && (
+          <video onLoadedData={handleBackgroundVideoLoaded} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+        )}
+      </main>
+    </>
   );
 };
 

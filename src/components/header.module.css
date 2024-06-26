@@ -33,7 +33,7 @@
   text-decoration: none;
   z-index: 1000;
   color: var(--header-color, black); /* Color personalizable */
-  transition: color 0.3s ease-in-out !important; /* Para una transición suave del color */
+  transition: color 0.1s ease-in-out !important; /* Para una transición suave del color */
 }
 
 .logoActive {
