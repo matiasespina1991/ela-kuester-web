@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Container, Typography, TextField, Button, Box, Alert } from "@mui/material";
+import { Container, Typography, TextField, Button, Box, Alert, CircularProgress } from "@mui/material";
 import { getSettings } from "../../utils/getSettings";
 import { getPortfolio } from "../../utils/getPortfolio";
 import Header from "../../components/header";
 
 import dynamic from 'next/dynamic';
+import { set } from "firebase/database";
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
-
 
 const Portfolio: React.FC = () => {
   const [settings, setSettings] = useState<any>(null);
@@ -17,6 +17,7 @@ const Portfolio: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [portfolioFile, setPortfolioFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [authenticating, setAuthenticating] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -38,8 +39,16 @@ const Portfolio: React.FC = () => {
 
   const handlePasswordSubmit = () => {
     if (settings && settings.portfolio_password === password) {
-      setIsAuthenticated(true);
-      setError(null);
+      setTimeout(() => {
+           setAuthenticating(true);
+      }, 100);
+   
+
+      setTimeout(() => {
+        setIsAuthenticated(true);
+        setError(null);
+        setAuthenticating(false);
+      }, 500);
     } else {
       setError('Incorrect password. Please try again.');
     }
@@ -54,37 +63,21 @@ const Portfolio: React.FC = () => {
   return (
     <>
       <Container sx={{ mt: 4, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        {isAuthenticated ? (
-          portfolioFile ? (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-                marginTop: '3rem',
-              }}
-            >
-              <PdfViewer fileUrl={portfolioFile} />
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '100%',
-              }}
-            >
-              <Typography variant="h6">No portfolio yet. Come back later!</Typography>
-              <Button variant="contained" color="primary" href="/" sx={{ mt: 2 }}>
-                Go Home
-              </Button>
-            </Box>
-          )
-        ) : (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: isAuthenticated ? 0 : 1,
+            transition: 'opacity 0.2s ease-in-out',
+            zIndex: isAuthenticated ? -1 : 1,
+          }}
+        >
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
             <Typography sx={{ fontFamily: 'monospace', textAlign: 'center' }}>Enter password to access the portfolio</Typography>
             <TextField
@@ -109,12 +102,51 @@ const Portfolio: React.FC = () => {
                 },
               }}
             />
-            <Button variant="contained" color="primary" onClick={handlePasswordSubmit}>
+            <Button sx={{backgroundColor: authenticating ? "gray !important" : "black",
+            transition: 'background-color 0.4s ease-in-out',}} variant="contained" onClick={handlePasswordSubmit}>
               Submit
+              {/* {authenticating && <CircularProgress size={13} sx={{ ml: '0.4rem' }} color="inherit" />} */}
             </Button>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
           </Box>
-        )}
+        </Box>
+
+        <Box
+          sx={{
+            opacity: isAuthenticated ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+            zIndex: isAuthenticated ? 1 : -1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            marginTop: '3rem',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+          }}
+        >
+          {portfolioFile ? (
+            <PdfViewer fileUrl={portfolioFile} />
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+              }}
+            >
+              <Typography variant="h6">No portfolio yet. Come back later!</Typography>
+              <Button variant="contained" color="primary" href="/" sx={{ mt: 2 }}>
+                Go Home
+              </Button>
+            </Box>
+          )}
+        </Box>
       </Container>
     </>
   );

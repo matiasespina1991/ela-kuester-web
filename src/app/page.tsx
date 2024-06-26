@@ -7,6 +7,7 @@ import { getHomePageVideo } from "../utils/getHomePageVideo";
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
+  const [backgroundVideoLoaded, setBackgroundVideoLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -16,10 +17,14 @@ const Home: React.FC = () => {
     fetchVideo();
   }, []);
 
+ const handleBackgroundVideoLoaded = () => {
+    setBackgroundVideoLoaded(true);
+ }  
+
   return (
     <main className={styles.main}>
       {videoUrl && (
-        <video className={styles.backgroundVideo} autoPlay loop muted playsInline>
+        <video onLoad={() => handleBackgroundVideoLoaded()} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
           <source src={videoUrl} type="video/mp4" />
         </video>
       )}

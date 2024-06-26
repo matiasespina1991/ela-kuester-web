@@ -1,12 +1,13 @@
+// src/app/page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
+  const [backgroundVideoLoaded, setBackgroundVideoLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -16,14 +17,17 @@ const Home: React.FC = () => {
     fetchVideo();
   }, []);
 
+ const handleBackgroundVideoLoaded = () => {
+    setBackgroundVideoLoaded(true);
+ }  
+
   return (
     <main className={styles.main}>
       {videoUrl && (
-        <video className={styles.backgroundVideo} autoPlay loop muted playsInline>
+        <video onLoad={() => handleBackgroundVideoLoaded()} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
           <source src={videoUrl} type="video/mp4" />
         </video>
       )}
-      
     </main>
   );
 };
@@ -33,15 +37,23 @@ export default Home;
 "use client";
 
 import { useState, useEffect } from "react";
-import { Container, Typography, TextField, Button, Box, Alert } from "@mui/material";
+import { Container, Typography, TextField, Button, Box, Alert, CircularProgress } from "@mui/material";
 import { getSettings } from "../../utils/getSettings";
+import { getPortfolio } from "../../utils/getPortfolio";
 import Header from "../../components/header";
 
-const Portfolio = () => {
+import dynamic from 'next/dynamic';
+import { set } from "firebase/database";
+
+const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
+
+const Portfolio: React.FC = () => {
   const [settings, setSettings] = useState<any>(null);
   const [password, setPassword] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [portfolioFile, setPortfolioFile] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [authenticating, setAuthenticating] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -51,50 +63,126 @@ const Portfolio = () => {
     fetchSettings();
   }, []);
 
+  useEffect(() => {
+    const fetchPortfolio = async () => {
+      const portfolio = await getPortfolio();
+      if (portfolio) {
+        setPortfolioFile(portfolio.file_url);
+      }
+    };
+    fetchPortfolio();
+  }, []);
+
   const handlePasswordSubmit = () => {
     if (settings && settings.portfolio_password === password) {
-      setIsAuthenticated(true);
-      setError(null);
+      setTimeout(() => {
+           setAuthenticating(true);
+      }, 100);
+   
+
+      setTimeout(() => {
+        setIsAuthenticated(true);
+        setError(null);
+        setAuthenticating(false);
+      }, 500);
     } else {
       setError('Incorrect password. Please try again.');
     }
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handlePasswordSubmit();
+    }
+  };
+
   return (
     <>
-      <Header />
-      <Container maxWidth="md" sx={{ mt: 4,height: '100%',
-display: 'flex',
-flexDirection: 'column',
-justifyContent: 'center' }}>
-        {isAuthenticated ? (
-          <Box>
-            <Typography variant="h4">Welcome to the portfolio!</Typography>
-       
-          </Box>
-        ) : (
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            sx={{ mt: 4 }}
-          >
-            <Typography sx={{fontFamily: 'monospace'}} >Insert password to access portfolio:</Typography>
+      <Container sx={{ mt: 4, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            opacity: isAuthenticated ? 0 : 1,
+            transition: 'opacity 0.2s ease-in-out',
+            zIndex: isAuthenticated ? -1 : 1,
+          }}
+        >
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
+            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center' }}>Enter password to access the portfolio</Typography>
             <TextField
-              type="password"
+              type="text"
               value={password}
-              size="small"
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
               fullWidth
-              sx={{ my: 2, maxWidth: 300}}
+              autoComplete='off'
+              size="small"
+              sx={{
+                my: 2,
+                maxWidth: 300,
+                fontFamily: 'monospace',
+                letterSpacing: '0.1em',
+                input: {
+                  fontFamily: 'monospace',
+                  letterSpacing: '0.1em',
+                  WebkitTextSecurity: 'disc',
+                  MozTextSecurity: 'disc', 
+                  textSecurity: 'disc',  
+                },
+              }}
             />
-            <Button variant="contained" color="primary" onClick={handlePasswordSubmit}>
+            <Button sx={{backgroundColor: authenticating ? "gray !important" : "black",
+            transition: 'background-color 0.4s ease-in-out',}} variant="contained" onClick={handlePasswordSubmit}>
               Submit
+              {/* {authenticating && <CircularProgress size={13} sx={{ ml: '0.4rem' }} color="inherit" />} */}
             </Button>
             {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
           </Box>
-        )}
+        </Box>
+
+        <Box
+          sx={{
+            opacity: isAuthenticated ? 1 : 0,
+            transition: 'opacity 0.2s ease-in-out',
+            zIndex: isAuthenticated ? 1 : -1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            marginTop: '3rem',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+          }}
+        >
+          {portfolioFile ? (
+            <PdfViewer fileUrl={portfolioFile} />
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+              }}
+            >
+              <Typography variant="h6">No portfolio yet. Come back later!</Typography>
+              <Button variant="contained" color="primary" href="/" sx={{ mt: 2 }}>
+                Go Home
+              </Button>
+            </Box>
+          )}
+        </Box>
       </Container>
     </>
   );
@@ -102,59 +190,28 @@ justifyContent: 'center' }}>
 
 export default Portfolio;
 
-import Header from "@/components/header";
-import type { Metadata } from "next";
-import localFont from 'next/font/local';
+// src/app/layout.tsx
+import { ReactNode } from "react";
+import ClientLayout from './ClientLayout';
 
-
-
-const neueHaasDisplay = localFont({
-  src: [
-    { path: '/fonts/NeueHaasDisplayBlack.ttf', weight: '900', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayBlackItalic.ttf', weight: '900', style: 'italic' },
-    { path: '/fonts/NeueHaasDisplayBold.ttf', weight: '700', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayBoldItalic.ttf', weight: '700', style: 'italic' },
-    { path: '/fonts/NeueHaasDisplayLight.ttf', weight: '300', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayLightItalic.ttf', weight: '300', style: 'italic' },
-    { path: '/fonts/NeueHaasDisplayMediu.ttf', weight: '500', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayMediumItalic.ttf', weight: '500', style: 'italic' },
-    { path: '/fonts/NeueHaasDisplayRomanItalic.ttf', weight: '400', style: 'italic' },
-    { path: '/fonts/NeueHaasDisplayRoman.ttf', weight: '400', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayThin.ttf', weight: '100', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayThinItalic.ttf', weight: '100', style: 'italic' },
-    { path: '/fonts/NeueHaasDisplayXThin.ttf', weight: '50', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayXThinItalic.ttf', weight: '50', style: 'italic' },
-    { path: '/fonts/NeueHaasDisplayXXThin.ttf', weight: '25', style: 'normal' },
-    { path: '/fonts/NeueHaasDisplayXXThinItalic.ttf', weight: '25', style: 'italic' },
-  ]
-});
-
-export const metadata: Metadata = {
+export const metadata = {
   title: "Ela Kuester",
-  description: "Ela Kuester's online portfolio",
+  description: "London based fashion designer, stylist and artist.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-    style={{
-      height: '100%',
-    }}
-    lang="en">
-      <body
-      style={{height: '100%'}}
-      className={neueHaasDisplay.className}>
-        <Header />
-        {children}
+    <html style={{ height: '100%' }} lang="en">
+      <body style={{ height: '100%' }}>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );
 }
 
+// src/components/header.tsx
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -174,7 +231,11 @@ const Header: React.FC = () => {
   }, [pathname]);
 
   const handleLinkClick = () => {
-    setOpen(false);
+    //set a little timeout to close the menu after clicking a link
+    setTimeout(() => {
+      setOpen(false);
+    }, 200);
+    // setOpen(false);
   };
 
   return (
@@ -185,16 +246,16 @@ const Header: React.FC = () => {
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>
-            <Hamburger color={isOpen || !isWhite ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>
         <div className={styles.menu}>
-          <Link href="/" className={styles.menuItem} onClick={handleLinkClick}>Home</Link>
-          <Link href="/fashion" className={styles.menuItem} onClick={handleLinkClick}>Fashion</Link>
-          <Link href="/art" className={styles.menuItem} onClick={handleLinkClick}>Art</Link>
-          <Link href="/portfolio" className={styles.menuItem} onClick={handleLinkClick}>Portfolio</Link>
-          <Link href="/about" className={styles.menuItem} onClick={handleLinkClick}>About</Link>
-          <Link href="/contact" className={styles.menuItem} onClick={handleLinkClick}>Contact</Link>
+          <Link prefetch={true} href="/" className={styles.menuItem} onClick={handleLinkClick}>Home</Link>
+          <Link prefetch={true} href="/fashion" className={styles.menuItem} onClick={handleLinkClick}>Fashion</Link>
+          <Link prefetch={true} href="/art" className={styles.menuItem} onClick={handleLinkClick}>Art</Link>
+          <Link prefetch={true} href="/portfolio" className={styles.menuItem} onClick={handleLinkClick}>Portfolio</Link>
+          <Link prefetch={true} href="/about" className={styles.menuItem} onClick={handleLinkClick}>About</Link>
+          <Link prefetch={true} href="/contact" className={styles.menuItem} onClick={handleLinkClick}>Contact</Link>
         </div>
       </nav>
     </>
@@ -211,7 +272,17 @@ export default Header;
   width: 100%;
   z-index: 1000;
   font-family: 'NeueHaasDisplay', sans-serif;
+  letter-spacing: 0.02rem;
 }
+
+.nav a {
+
+  transition: text-shadow 0.2s ease; /* Para una transición suave del color */
+}
+
+.nav a:hover {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+} 
 
 .navContent {
   display: flex;
@@ -222,12 +293,13 @@ export default Header;
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.75rem;
+  letter-spacing: -0.02rem;
+  font-weight: normal;
   text-decoration: none;
   z-index: 1000;
   color: var(--header-color, black); /* Color personalizable */
-  transition: color 0.3s ease; /* Para una transición suave del color */
+  transition: color 0.3s ease-in-out !important; /* Para una transición suave del color */
 }
 
 .logoActive {
@@ -275,6 +347,9 @@ export default Header;
   pointer-events: all;
 }
 
+ .hamburger-react div {
+  height: 2px !important; 
+}
 :root {
   --max-width: 1100px;
   --border-radius: 12px;

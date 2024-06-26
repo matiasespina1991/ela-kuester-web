@@ -6,7 +6,17 @@
   width: 100%;
   z-index: 1000;
   font-family: 'NeueHaasDisplay', sans-serif;
+  letter-spacing: 0.02rem;
 }
+
+.nav a {
+
+  transition: text-shadow 0.2s ease; /* Para una transición suave del color */
+}
+
+.nav a:hover {
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+} 
 
 .navContent {
   display: flex;
@@ -23,7 +33,7 @@
   text-decoration: none;
   z-index: 1000;
   color: var(--header-color, black); /* Color personalizable */
-  transition: color 0.3s ease; /* Para una transición suave del color */
+  transition: color 0.3s ease-in-out !important; /* Para una transición suave del color */
 }
 
 .logoActive {

@@ -18,7 +18,11 @@ const Header: React.FC = () => {
   }, [pathname]);
 
   const handleLinkClick = () => {
-    setOpen(false);
+    //set a little timeout to close the menu after clicking a link
+    setTimeout(() => {
+      setOpen(false);
+    }, 200);
+    // setOpen(false);
   };
 
   return (
@@ -33,12 +37,12 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className={styles.menu}>
-          <Link href="/" className={styles.menuItem} onClick={handleLinkClick}>Home</Link>
-          <Link href="/fashion" className={styles.menuItem} onClick={handleLinkClick}>Fashion</Link>
-          <Link href="/art" className={styles.menuItem} onClick={handleLinkClick}>Art</Link>
-          <Link href="/portfolio" className={styles.menuItem} onClick={handleLinkClick}>Portfolio</Link>
-          <Link href="/about" className={styles.menuItem} onClick={handleLinkClick}>About</Link>
-          <Link href="/contact" className={styles.menuItem} onClick={handleLinkClick}>Contact</Link>
+          <Link prefetch={true} href="/" className={styles.menuItem} onClick={handleLinkClick}>Home</Link>
+          <Link prefetch={true} href="/fashion" className={styles.menuItem} onClick={handleLinkClick}>Fashion</Link>
+          <Link prefetch={true} href="/art" className={styles.menuItem} onClick={handleLinkClick}>Art</Link>
+          <Link prefetch={true} href="/portfolio" className={styles.menuItem} onClick={handleLinkClick}>Portfolio</Link>
+          <Link prefetch={true} href="/about" className={styles.menuItem} onClick={handleLinkClick}>About</Link>
+          <Link prefetch={true} href="/contact" className={styles.menuItem} onClick={handleLinkClick}>Contact</Link>
         </div>
       </nav>
     </>
