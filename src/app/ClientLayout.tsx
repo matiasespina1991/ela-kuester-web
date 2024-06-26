@@ -40,7 +40,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header />
+      <Header videoLoaded={true} />
       <AnimatePresence mode="wait">
         <PageTransition>
             {children}
