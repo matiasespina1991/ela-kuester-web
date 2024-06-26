@@ -1,4 +1,4 @@
-import '../../pollyfills.js'
+
 
 import { ReactNode } from "react";
 import { ThemeProvider } from '@mui/material/styles';
