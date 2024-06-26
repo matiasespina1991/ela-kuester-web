@@ -86,7 +86,7 @@ const Portfolio: React.FC = () => {
           )
         ) : (
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
-            <Typography sx={{ fontFamily: 'monospace' }}>Enter password to access portfolio:</Typography>
+            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center' }}>Enter password to access the portfolio</Typography>
             <TextField
               type="text"
               value={password}
@@ -103,9 +103,9 @@ const Portfolio: React.FC = () => {
                 input: {
                   fontFamily: 'monospace',
                   letterSpacing: '0.1em',
-                  WebkitTextSecurity: 'disc',  // Oculta los caracteres en los navegadores WebKit (Chrome, Safari)
-                  MozTextSecurity: 'disc',  // Oculta los caracteres en Firefox
-                  textSecurity: 'disc',  // Oculta los caracteres en navegadores que soportan textSecurity (futuro)
+                  WebkitTextSecurity: 'disc',
+                  MozTextSecurity: 'disc', 
+                  textSecurity: 'disc',  
                 },
               }}
             />

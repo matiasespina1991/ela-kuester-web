@@ -30,7 +30,7 @@ const neueHaasDisplay = localFont({
 
 export const metadata = {
   title: "Ela Kuester",
-  description: "Ela Kuester's online portfolio",
+  description: "London based fashion designer, stylist and artist.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
