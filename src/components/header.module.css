@@ -26,14 +26,19 @@
 .nav a:hover {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
+/* src/components/header.module.css */
 
 .logoInitial {
   position: relative;
   transform: translate(-50%, -50%) scale(3);
-  margin-left: 48vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
+  margin-left: 46vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
   margin-top: 48vh;  /* Ajusta el margen superior para centrar verticalmente */
   transition: transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out, opacity 1s ease-in-out;
-  opacity: 1;
+  opacity: 0; /* Inicia con opacidad 0 */
+}
+
+.logoInitialVisible {
+  opacity: 1; /* Se hace visible */
 }
 
 .logoFinal {
@@ -41,6 +46,7 @@
   transform: translate(0, 0) scale(1);
   margin-left: 0; /* Resetea el margen izquierdo */
   margin-top: 0;  /* Resetea el margen superior */
+  transition: transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out, opacity 1s ease-in-out;
   opacity: 1;
 }
 
@@ -65,6 +71,7 @@
 .logoActive {
   color: black !important;
 }
+
 
 .forceWhite {
   color: white;

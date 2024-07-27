@@ -16,10 +16,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
-  const [logoClass, setLogoClass] = useState<string>(
-
-    pathname === '/' ? styles.logoInitial : styles.logoFinal
-  );
+  const [logoClass, setLogoClass] = useState<string>(styles.logoInitial);
 
   useEffect(() => {
     const whiteRoutes = ['/'];
@@ -53,8 +50,17 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   useEffect(() => {
     // Change logo class after a delay to trigger the transition
     const timeout = setTimeout(() => {
+      setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
+    }, 1500); // delay of 1.5 seconds
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    // Change logo class to final after an additional delay
+    const timeout = setTimeout(() => {
       setLogoClass(styles.logoFinal);
-    }, 1500); // delay of 3 seconds
+    }, 3000); // delay of 3 seconds
 
     return () => clearTimeout(timeout);
   }, []);
@@ -69,14 +75,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     <>
       <nav className={`${styles.nav} ${isOpen ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}>
         <div className={styles.navContent}>
-          <Link href="/" className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''} 
-          
-        
-          
-          `}
-
-          
-          >
+          <Link href="/" className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''}`}>
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>
