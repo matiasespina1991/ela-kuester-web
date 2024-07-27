@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
+import path from 'path';
 
 interface HeaderProps {
   videoLoaded: boolean;
@@ -16,7 +17,12 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
-  const [logoClass, setLogoClass] = useState<string>(styles.logoInitial);
+  const [logoClass, setLogoClass] = useState<string>(
+    pathname === '/' ? styles.logoInitial : styles.logoFinal
+  );
+  const [hamburgerClass, setHamburgerClass] = useState<string>(
+    pathname === '/' ? styles.hamburgerHidden : styles.hamburgerVisible
+  );
 
   useEffect(() => {
     const whiteRoutes = ['/'];
@@ -47,24 +53,39 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     };
   }, []);
 
+
+
+  
   useEffect(() => {
+
+    if(pathname === '/') {
+
+   
+
     // Change logo class after a delay to trigger the transition
     const timeout = setTimeout(() => {
       setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
     }, 1500); // delay of 1.5 seconds
 
     return () => clearTimeout(timeout);
+
+     }
   }, []);
 
   useEffect(() => {
+
+    
     // Change logo class to final after an additional delay
     const timeout = setTimeout(() => {
       setLogoClass(styles.logoFinal);
+      setHamburgerClass(styles.hamburgerVisible); // Mostrar el hamburger después de la animación del logo
     }, 3000); // delay of 3 seconds
 
     return () => clearTimeout(timeout);
   }, []);
 
+
+   
   const handleLinkClick = () => {
     setTimeout(() => {
       setOpen(false);
@@ -78,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
           <Link href="/" className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''}`}>
             Ela Kuester
           </Link>
-          <div className={styles.hamburger}>
+          <div className={`${styles.hamburger} ${hamburgerClass}`}>
             <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'black'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>

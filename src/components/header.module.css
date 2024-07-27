@@ -77,12 +77,20 @@
   color: white;
 }
 
+
 .hamburger {
   display: flex;
   align-items: center;
   z-index: 1000;
   color: var(--header-color, black);
+  opacity: 0; /* Inicia con opacidad 0 */
+  transition: opacity 1s ease-in-out; /* Transición de opacidad */
 }
+
+.hamburgerVisible {
+  opacity: 1; /* Se hace visible */
+}
+
 
 .menu {
   position: fixed;

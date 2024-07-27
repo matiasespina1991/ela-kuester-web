@@ -33,6 +33,7 @@ useEffect(() => {
           sx={{
             pt: "10rem",
             px: "0.5rem",
+        
             display: "flex",
             flexDirection: "column",
             height: "100vh",
@@ -50,6 +51,7 @@ useEffect(() => {
 
         <motion.div    animate={{ opacity: loading ? 0 : 1 }}>
            <Typography variant="h6" sx={{
+            maxWidth: "37rem",
             
             lineHeight: "1.8rem",
            }}>

@@ -32,7 +32,7 @@ const Contact = () => {
   const handleCopy = (text: string, event: React.MouseEvent) => {
     navigator.clipboard.writeText(text).then(() => {
       const rect = (event.target as HTMLElement).getBoundingClientRect();
-      setChipPosition({ top: rect.bottom - 35 + window.scrollY, left: rect.left + 60 + window.scrollX });
+      setChipPosition({ top: rect.bottom - 25 + window.scrollY, left: rect.left + 60 + window.scrollX });
       setCopiedText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -43,10 +43,10 @@ const Contact = () => {
     <>
       <main className={styles.main}>
         <Stack
-          spacing={5}
+          spacing={3}
           direction={"column"}
           sx={{
-            pt: "10rem",
+            pt: "12rem",
             px: "0.5rem",
             display: "flex",
             flexDirection: "column",
@@ -55,17 +55,20 @@ const Contact = () => {
           }}
         >
           <motion.div style={{ opacity: 0 }} animate={{ opacity: loading ? 0 : 1 }}>
-            <Typography variant="h3">Contact</Typography>
+            <Typography variant="h3" fontSize="2.7rem" >Contact</Typography>
           </motion.div>
           <motion.div style={{ opacity: 0 }} animate={{ opacity: loading ? 0 : 1 }}>
-            <Typography variant="h3">{contactData.name}</Typography>
+            <Typography variant="h3" fontSize="2.7rem" fontWeight="bold">{contactData.name}</Typography>
           </motion.div>
           <motion.div style={{ opacity: 0 }} animate={{ opacity: loading ? 0 : 1 }} className={styles.contactInfo}>
             <Typography
               variant="h3"
+              fontSize="2.7rem" 
               className={styles.phone}
+               fontWeight="bold"
               onClick={(e) => handleCopy(contactData.phone, e)}
-              sx={{ cursor: "pointer" }}
+              sx={{ cursor: "pointer"
+               }}
             >
               {contactData.phone}
             </Typography>
@@ -73,6 +76,8 @@ const Contact = () => {
           <motion.div style={{ opacity: 0 }} animate={{ opacity: loading ? 0 : 1 }} className={styles.contactInfo}>
             <Typography
               variant="h3"
+              fontSize="2.7rem" 
+               fontWeight="bold"
               className={styles.email}
               onClick={(e) => handleCopy(contactData.email, e)}
               sx={{ cursor: "pointer" }}
