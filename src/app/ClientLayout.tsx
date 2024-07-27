@@ -1,7 +1,7 @@
 // src/components/ClientLayout.tsx
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../theme/theme';
@@ -9,6 +9,7 @@ import Header from "../components/header";
 import localFont from 'next/font/local';
 import PageTransition from '../components/PageTransition';
 import { AnimatePresence } from 'framer-motion';
+import { useRouter } from "next/router";
 
 const neueHaasDisplay = localFont({
   src: [
@@ -37,6 +38,9 @@ interface ClientLayoutProps {
 }
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
+
+ 
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

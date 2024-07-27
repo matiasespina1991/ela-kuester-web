@@ -15,25 +15,68 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [logoClass, setLogoClass] = useState<string>(
+
+    pathname === '/' ? styles.logoInitial : styles.logoFinal
+  );
 
   useEffect(() => {
     const whiteRoutes = ['/'];
     setIsWhite(whiteRoutes.includes(pathname));
   }, [pathname]);
 
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      setIsVisible(false);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => setIsVisible(true), 300);
+    };
+
+    const handleMouseMove = () => {
+      setIsVisible(true);
+      clearTimeout(timeoutId);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Change logo class after a delay to trigger the transition
+    const timeout = setTimeout(() => {
+      setLogoClass(styles.logoFinal);
+    }, 1500); // delay of 3 seconds
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   const handleLinkClick = () => {
-    //set a little timeout to close the menu after clicking a link
     setTimeout(() => {
       setOpen(false);
     }, 200);
-    // setOpen(false);
   };
 
   return (
     <>
-      <nav className={`${styles.nav} ${isOpen ? styles.active : ''}`}>
+      <nav className={`${styles.nav} ${isOpen ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}>
         <div className={styles.navContent}>
-          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite && videoLoaded ? styles.forceWhite : ''}`}>
+          <Link href="/" className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''} 
+          
+        
+          
+          `}
+
+          
+          >
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>

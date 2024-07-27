@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
+import Header from "../components/header";
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
@@ -17,18 +18,21 @@ const Home: React.FC = () => {
     fetchVideo();
   }, []);
 
- const handleBackgroundVideoLoaded = () => {
+  const handleBackgroundVideoLoaded = () => {
     setBackgroundVideoLoaded(true);
- }  
+  };
 
   return (
-    <main className={styles.main}>
-      {videoUrl && (
-        <video onLoad={() => handleBackgroundVideoLoaded()} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
-          <source src={videoUrl} type="video/mp4" />
-        </video>
-      )}
-    </main>
+    <>
+      <Header videoLoaded={backgroundVideoLoaded} />
+      <main className={styles.main}>
+        {videoUrl && (
+          <video onLoadedData={handleBackgroundVideoLoaded} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
+            <source src={videoUrl} type="video/mp4" />
+          </video>
+        )}
+      </main>
+    </>
   );
 };
 
@@ -156,9 +160,11 @@ const Portfolio: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100%',
+            height: isAuthenticated ?'100%' : '0 !important',
+            overflow: isAuthenticated ? 'visible' : 'hidden',
             marginTop: '3rem',
             position: 'absolute',
+         
             top: 0,
             left: 0,
             width: '100%',
@@ -220,15 +226,44 @@ import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  videoLoaded: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(true);
 
   useEffect(() => {
     const whiteRoutes = ['/'];
     setIsWhite(whiteRoutes.includes(pathname));
   }, [pathname]);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      setIsVisible(false);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => setIsVisible(true), 300);
+    };
+
+    const handleMouseMove = () => {
+      setIsVisible(true);
+      clearTimeout(timeoutId);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   const handleLinkClick = () => {
     //set a little timeout to close the menu after clicking a link
@@ -240,13 +275,13 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <nav className={`${styles.nav} ${isOpen ? styles.active : ''}`}>
+      <nav className={`${styles.nav} ${isOpen ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}>
         <div className={styles.navContent}>
-          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite ? styles.forceWhite : ''}`}>
+          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite && videoLoaded ? styles.forceWhite : ''}`}>
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>
-            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>
         <div className={styles.menu}>
@@ -273,16 +308,25 @@ export default Header;
   z-index: 1000;
   font-family: 'NeueHaasDisplay', sans-serif;
   letter-spacing: 0.02rem;
+  transition: opacity 0.3s ease;
+}
+
+.nav.visible {
+  opacity: 1;
+}
+
+
+.nav.hidden {
+  opacity: 0;
 }
 
 .nav a {
-
-  transition: text-shadow 0.2s ease; /* Para una transición suave del color */
+  transition: text-shadow 0.2s ease;
 }
 
 .nav a:hover {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
-} 
+}
 
 .navContent {
   display: flex;
@@ -298,23 +342,23 @@ export default Header;
   font-weight: normal;
   text-decoration: none;
   z-index: 1000;
-  color: var(--header-color, black); /* Color personalizable */
-  transition: color 0.3s ease-in-out !important; /* Para una transición suave del color */
+  color: var(--header-color, black);
+  transition: color 0.3s ease-in-out !important;
 }
 
 .logoActive {
-  color: black !important; /* Color del logo cuando el menú está activo */
+  color: black !important;
 }
 
 .forceWhite {
-  color: white; 
+  color: white;
 }
 
 .hamburger {
   display: flex;
   align-items: center;
   z-index: 1000;
-  color: var(--header-color, black); /* Color personalizable */
+  color: var(--header-color, black);
 }
 
 .menu {
@@ -347,9 +391,10 @@ export default Header;
   pointer-events: all;
 }
 
- .hamburger-react div {
-  height: 2px !important; 
+.hamburger-react div {
+  height: 2px !important;
 }
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;

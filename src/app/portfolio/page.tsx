@@ -120,9 +120,11 @@ const Portfolio: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '100%',
+            height: isAuthenticated ?'100%' : '0 !important',
+            overflow: isAuthenticated ? 'visible' : 'hidden',
             marginTop: '3rem',
             position: 'absolute',
+         
             top: 0,
             left: 0,
             width: '100%',
