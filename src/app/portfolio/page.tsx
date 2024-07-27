@@ -7,7 +7,6 @@ import { getPortfolio } from "../../utils/getPortfolio";
 import Header from "../../components/header";
 
 import dynamic from 'next/dynamic';
-import { set } from "firebase/database";
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
 
@@ -79,7 +78,7 @@ const Portfolio: React.FC = () => {
           }}
         >
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
-            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center' }}>Enter password to access the portfolio</Typography>
+            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center', fontSize:'1.1rem' }}>Enter password to access the portfolio</Typography>
             <TextField
               type="text"
               value={password}
