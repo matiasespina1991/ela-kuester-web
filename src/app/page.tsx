@@ -24,7 +24,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <Header videoLoaded={backgroundVideoLoaded} />
+      {/* <Header videoLoaded={backgroundVideoLoaded} /> */}
       <main className={styles.main}>
         {videoUrl && (
           <video onLoadedData={handleBackgroundVideoLoaded} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>

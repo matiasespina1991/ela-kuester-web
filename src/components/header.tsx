@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             Ela Kuester
           </Link>
           <div className={styles.hamburger}>
-            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'black'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>
         <div className={styles.menu}>
