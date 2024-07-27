@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     // Change logo class after a delay to trigger the transition
     const timeout = setTimeout(() => {
       setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
-    }, 1500); // delay of 1.5 seconds
+    }, 500); // delay of 1.5 seconds
 
     return () => clearTimeout(timeout);
 
@@ -79,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     const timeout = setTimeout(() => {
       setLogoClass(styles.logoFinal);
       setHamburgerClass(styles.hamburgerVisible); // Mostrar el hamburger después de la animación del logo
-    }, 3000); // delay of 3 seconds
+    }, 2500); // delay of 3 seconds
 
     return () => clearTimeout(timeout);
   }, []);
