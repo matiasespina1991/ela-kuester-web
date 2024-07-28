@@ -58,7 +58,7 @@
 }
 
 .logo {
-  transition: all 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out !important;
+  transition: all 0.5s ease-in-out, margin-left 0.5s ease-in-out, margin-top 0.5s ease-in-out !important;
   font-size: 1.75rem;
   letter-spacing: -0.02rem;
   font-weight: normal;
