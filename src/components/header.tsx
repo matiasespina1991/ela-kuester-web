@@ -30,7 +30,9 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
 
   useEffect(() => {
     const whiteRoutes = ['/'];
-    setIsWhite(whiteRoutes.includes(pathname));
+    if (pathname) {
+      setIsWhite(whiteRoutes.includes(pathname));
+    }
   }, [pathname]);
 
   useEffect(() => {

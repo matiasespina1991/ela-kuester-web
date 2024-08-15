@@ -1,6 +1,6 @@
 'use client';
 
-import { Box } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -38,8 +38,61 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ fileUrl }) => {
   return (
     <Box height={window.innerHeight} marginTop={0}>
       <Document
-        loading="Loading portfolio..."
+        loading={
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '43vh',
+              transform: 'translateX(-46%)',
+            }}
+          >
+            <Stack
+              alignContent="center"
+              justifyContent="center"
+              alignItems="center"
+              spacing={3}
+            >
+              <CircularProgress size={30} sx={{ opacity: 0.7 }} />
+              <Stack
+                alignContent="center"
+                justifyContent="center"
+                alignItems="center"
+                spacing={0.5}
+              >
+                <Typography textTransform="uppercase" variant="body1">
+                  loading portfolio...
+                </Typography>
+                <Typography textTransform="uppercase" variant="body1">
+                  Please wait.
+                </Typography>
+              </Stack>
+            </Stack>
+          </Box>
+        }
         file={fileUrl}
+        noData={
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '43vh',
+              transform: 'translateX(-46%)',
+            }}
+          >
+            <Stack
+              alignContent="center"
+              justifyContent="center"
+              alignItems="center"
+              spacing={0.5}
+            >
+              <Typography textTransform="uppercase" variant="body1">
+                No portfolio found.
+              </Typography>
+              <Typography textTransform="uppercase" variant="body1">
+                {':('}
+              </Typography>
+            </Stack>
+          </Box>
+        }
         onLoadSuccess={onDocumentLoadSuccess}
       >
         {Array.from(new Array(numPages), (el, index) => (

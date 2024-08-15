@@ -18,6 +18,7 @@ import styles from '../page.module.css';
 import Header from '../../components/header';
 
 import dynamic from 'next/dynamic';
+import React from 'react';
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), {
   ssr: false,
@@ -186,7 +187,7 @@ const Portfolio: React.FC = () => {
 
             alignItems: 'center',
             justifyContent: 'center',
-            height: isAuthenticated ? '100rem' : '0 !important',
+            height: isAuthenticated ? '50rem' : '0 !important',
             overflow: isAuthenticated ? 'visible' : 'hidden',
             marginTop: '3rem',
             position: 'absolute',
