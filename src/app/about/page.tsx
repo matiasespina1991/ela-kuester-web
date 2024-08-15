@@ -29,7 +29,7 @@ const About = () => {
       <main className={styles.main}>
         <Box
           sx={{
-            pt: '35vh',
+            justifyContent: 'center',
             px: '1.6rem',
 
             display: 'flex',
