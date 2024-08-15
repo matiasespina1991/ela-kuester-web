@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // src/components/PageTransition.tsx
 import { motion } from 'framer-motion';
@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 const variants = {
   hidden: { opacity: 0 },
   enter: { opacity: 1, transition: { duration: 0.0 } },
-  exit: { opacity: 0, transition: { duration: 0.1 } },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
 interface PageTransitionProps {
@@ -25,7 +25,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
       initial="hidden"
       animate="enter"
       exit="exit"
-      style={{ height: '100%'}}
+      style={{ height: '100%' }}
     >
       {children}
     </motion.div>
