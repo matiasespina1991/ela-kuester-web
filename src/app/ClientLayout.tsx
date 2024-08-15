@@ -1,7 +1,7 @@
 // src/components/ClientLayout.tsx
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '../theme/theme';
@@ -10,6 +10,7 @@ import localFont from 'next/font/local';
 import PageTransition from '../components/PageTransition';
 import { AnimatePresence } from 'framer-motion';
 import { useRouter } from "next/router";
+import { FirstLoadProvider } from "@/context/FirstLoadContext";
 
 const neueHaasDisplay = localFont({
   src: [
@@ -38,11 +39,11 @@ interface ClientLayoutProps {
 }
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
-
  
 
   return (
     <ThemeProvider theme={theme}>
+       <FirstLoadProvider>
       <CssBaseline />
       <Header videoLoaded={true} />
       <AnimatePresence mode="wait">
@@ -51,6 +52,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         
         </PageTransition>
       </AnimatePresence>
+      </FirstLoadProvider>
     </ThemeProvider>
   );
 };

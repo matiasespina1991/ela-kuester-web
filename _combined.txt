@@ -1,14 +1,17 @@
 // src/app/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import styles from "./page.module.css";
 import { getHomePageVideo } from "../utils/getHomePageVideo";
 import Header from "../components/header";
+import { Typography } from "@mui/material";
+import { easeIn, easeOut, motion } from "framer-motion";
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [backgroundVideoLoaded, setBackgroundVideoLoaded] = useState<boolean>(false);
+  const [showMotto, setShowMotto] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -22,10 +25,27 @@ const Home: React.FC = () => {
     setBackgroundVideoLoaded(true);
   };
 
+  useEffect(() => {
+    setShowMotto(true);
+  }, []);
+
   return (
     <>
-      <Header videoLoaded={backgroundVideoLoaded} />
+      {/* <Header videoLoaded={backgroundVideoLoaded} /> */}
       <main className={styles.main}>
+        <motion.div 
+     
+    initial={{ opacity: 0, scale: 1 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.2,
+        delay: 2.9,
+        ease:  easeIn,
+      }}
+        >
+          <Typography className={styles.motto}>LONDON BASED FASHION DESIGNER, STYLIST, AND ARTIST</Typography>
+        </motion.div>
+        
         {videoUrl && (
           <video onLoadedData={handleBackgroundVideoLoaded} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
             <source src={videoUrl} type="video/mp4" />
@@ -47,7 +67,6 @@ import { getPortfolio } from "../../utils/getPortfolio";
 import Header from "../../components/header";
 
 import dynamic from 'next/dynamic';
-import { set } from "firebase/database";
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
 
@@ -119,7 +138,7 @@ const Portfolio: React.FC = () => {
           }}
         >
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
-            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center' }}>Enter password to access the portfolio</Typography>
+            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center', fontSize:'1.1rem' }}>Enter password to access the portfolio</Typography>
             <TextField
               type="text"
               value={password}
@@ -196,6 +215,72 @@ const Portfolio: React.FC = () => {
 
 export default Portfolio;
 
+// src/components/ClientLayout.tsx
+"use client";
+
+import { ReactNode, useEffect, useState } from "react";
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from '../theme/theme';
+import Header from "../components/header";
+import localFont from 'next/font/local';
+import PageTransition from '../components/PageTransition';
+import { AnimatePresence } from 'framer-motion';
+import { useRouter } from "next/router";
+
+const neueHaasDisplay = localFont({
+  src: [
+    { path: '/fonts/NeueHaasDisplayBlack.ttf', weight: '900', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayBlackItalic.ttf', weight: '900', style: 'italic' },
+    { path: '/fonts/NeueHaasDisplayBold.ttf', weight: '700', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayBoldItalic.ttf', weight: '700', style: 'italic' },
+    { path: '/fonts/NeueHaasDisplayLight.ttf', weight: '300', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayLightItalic.ttf', weight: '300', style: 'italic' },
+    { path: '/fonts/NeueHaasDisplayMediu.ttf', weight: '500', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayMediumItalic.ttf', weight: '500', style: 'italic' },
+    { path: '/fonts/NeueHaasDisplayRomanItalic.ttf', weight: '400', style: 'italic' },
+    { path: '/fonts/NeueHaasDisplayRoman.ttf', weight: '400', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayThin.ttf', weight: '100', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayThinItalic.ttf', weight: '100', style: 'italic' },
+    { path: '/fonts/NeueHaasDisplayXThin.ttf', weight: '50', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayXThinItalic.ttf', weight: '50', style: 'italic' },
+    { path: '/fonts/NeueHaasDisplayXXThin.ttf', weight: '25', style: 'normal' },
+    { path: '/fonts/NeueHaasDisplayXXThinItalic.ttf', weight: '25', style: 'italic' },
+  ]
+});
+
+
+interface ClientLayoutProps {
+  children: ReactNode;
+}
+
+const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (!firstLoad) {
+      setFirstLoad(true);
+    }
+  }, [firstLoad]);
+
+ 
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Header videoLoaded={true} />
+      <AnimatePresence mode="wait">
+        <PageTransition>
+            {children}
+        
+        </PageTransition>
+      </AnimatePresence>
+    </ThemeProvider>
+  );
+};
+
+export default ClientLayout;
+
 // src/app/layout.tsx
 import { ReactNode } from "react";
 import ClientLayout from './ClientLayout';
@@ -225,6 +310,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
+import path from 'path';
 
 interface HeaderProps {
   videoLoaded: boolean;
@@ -235,6 +321,12 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
+  const [logoClass, setLogoClass] = useState<string>(
+    pathname === '/' ? styles.logoInitial : styles.logoFinal
+  );
+  const [hamburgerClass, setHamburgerClass] = useState<string>(
+    pathname === '/' ? styles.hamburgerHidden : styles.hamburgerVisible
+  );
 
   useEffect(() => {
     const whiteRoutes = ['/'];
@@ -265,23 +357,54 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     };
   }, []);
 
+
+
+  
+  useEffect(() => {
+
+    if(pathname === '/') {
+
+   
+
+    // Change logo class after a delay to trigger the transition
+    const timeout = setTimeout(() => {
+      setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
+    }, 500); // delay of 1.5 seconds
+
+    return () => clearTimeout(timeout);
+
+     }
+  }, []);
+
+  useEffect(() => {
+
+    
+    // Change logo class to final after an additional delay
+    const timeout = setTimeout(() => {
+      setLogoClass(styles.logoFinal);
+      setHamburgerClass(styles.hamburgerVisible); // Mostrar el hamburger después de la animación del logo
+    }, 2500); // delay of 3 seconds
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+
+   
   const handleLinkClick = () => {
-    //set a little timeout to close the menu after clicking a link
     setTimeout(() => {
       setOpen(false);
     }, 200);
-    // setOpen(false);
   };
 
   return (
     <>
       <nav className={`${styles.nav} ${isOpen ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}>
         <div className={styles.navContent}>
-          <Link href="/" className={`${styles.logo} ${isOpen ? styles.logoActive : ''} ${isWhite && videoLoaded ? styles.forceWhite : ''}`}>
+          <Link href="/" className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''}`}>
             Ela Kuester
           </Link>
-          <div className={styles.hamburger}>
-            <Hamburger duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'white'} toggled={isOpen} toggle={setOpen} />
+          <div className={`${styles.hamburger} ${hamburgerClass}`}>
+            <Hamburger size={27}  duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'black'} toggled={isOpen} toggle={setOpen} />
           </div>
         </div>
         <div className={styles.menu}>
@@ -309,12 +432,12 @@ export default Header;
   font-family: 'NeueHaasDisplay', sans-serif;
   letter-spacing: 0.02rem;
   transition: opacity 0.3s ease;
+  padding: 1.8rem 2.7rem;
 }
 
 .nav.visible {
   opacity: 1;
 }
-
 
 .nav.hidden {
   opacity: 0;
@@ -327,39 +450,71 @@ export default Header;
 .nav a:hover {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
 }
+/* src/components/header.module.css */
+
+.logoInitial {
+  position: relative;
+  transform: translate(-50%, -50%) scale(3);
+  margin-left: 46vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
+  margin-top: 48vh;  /* Ajusta el margen superior para centrar verticalmente */
+  transition: transform 0.5s ease-in-out, margin-left 0.5s ease-in-out, margin-top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0; /* Inicia con opacidad 0 */
+}
+
+.logoInitialVisible {
+  opacity: 1; /* Se hace visible */
+}
+
+.logoFinal {
+  position: relative;
+  transform: translate(0, 0) scale(1);
+  margin-left: 0; /* Resetea el margen izquierdo */
+  margin-top: 0;  /* Resetea el margen superior */
+  transition: transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out, opacity 1s ease-in-out;
+  opacity: 1;
+}
 
 .navContent {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
-  padding: 1rem 2.3rem;
+  position: relative;
 }
 
 .logo {
-  font-size: 1.75rem;
+  transition: all 0.5s ease-in-out, margin-left 0.5s ease-in-out, margin-top 0.5s ease-in-out !important;
+  font-size: 1.50rem;
   letter-spacing: -0.02rem;
   font-weight: normal;
+  width: max-content;
   text-decoration: none;
   z-index: 1000;
   color: var(--header-color, black);
-  transition: color 0.3s ease-in-out !important;
 }
 
 .logoActive {
   color: black !important;
 }
 
+
 .forceWhite {
   color: white;
 }
+
 
 .hamburger {
   display: flex;
   align-items: center;
   z-index: 1000;
   color: var(--header-color, black);
+  opacity: 0; /* Inicia con opacidad 0 */
+  transition: opacity 1s ease-in-out; /* Transición de opacidad */
 }
+
+.hamburgerVisible {
+  opacity: 1; /* Se hace visible */
+}
+
 
 .menu {
   position: fixed;
@@ -381,7 +536,8 @@ export default Header;
 
 .menuItem {
   margin: 1.2rem 0;
-  font-size: 1.5rem;
+  font-size: 12pt;
+  text-transform: uppercase;
   text-decoration: none;
   color: black;
 }
@@ -393,6 +549,15 @@ export default Header;
 
 .hamburger-react div {
   height: 2px !important;
+}
+
+.logoFinalDelayed {
+  transition: opacity 2s ease-in-out 1s, transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out !important; /* Add delay to opacity */
+  opacity: 1;
+}
+
+.logoInitialDelayed {
+  opacity: 0;
 }
 
 :root {
@@ -615,6 +780,7 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
 
 @media (prefers-color-scheme: dark) {
   html {

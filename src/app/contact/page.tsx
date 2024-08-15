@@ -47,7 +47,7 @@ const Contact = () => {
           direction={"column"}
           sx={{
             pt: "12rem",
-            px: "0.5rem",
+            px: "1.6rem",
             display: "flex",
             flexDirection: "column",
             height: "100vh",

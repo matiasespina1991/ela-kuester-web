@@ -32,7 +32,7 @@ useEffect(() => {
         <Box
           sx={{
             pt: "10rem",
-            px: "0.5rem",
+            px: "1.6rem",
         
             display: "flex",
             flexDirection: "column",

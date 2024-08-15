@@ -8,7 +8,7 @@
   font-family: 'NeueHaasDisplay', sans-serif;
   letter-spacing: 0.02rem;
   transition: opacity 0.3s ease;
-  padding: 0.9rem 1.6rem;
+  padding: 1.8rem 2.7rem;
 }
 
 .nav.visible {
@@ -31,9 +31,13 @@
 .logoInitial {
   position: relative;
   transform: translate(-50%, -50%) scale(3);
-  margin-left: 46vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
-  margin-top: 48vh;  /* Ajusta el margen superior para centrar verticalmente */
-  transition: transform 0.5s ease-in-out, margin-left 0.5s ease-in-out, margin-top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  margin-left: 39vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
+  margin-top: 48vh; /* Ajusta el margen superior para centrar verticalmente */
+  transition:
+    transform 0.5s ease-in-out,
+    margin-left 0.5s ease-in-out,
+    margin-top 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
   opacity: 0; /* Inicia con opacidad 0 */
 }
 
@@ -45,21 +49,28 @@
   position: relative;
   transform: translate(0, 0) scale(1);
   margin-left: 0; /* Resetea el margen izquierdo */
-  margin-top: 0;  /* Resetea el margen superior */
-  transition: transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out, opacity 1s ease-in-out;
+  margin-top: 0; /* Resetea el margen superior */
+  transition:
+    transform 1s ease-in-out,
+    margin-left 1s ease-in-out,
+    margin-top 1s ease-in-out,
+    opacity 1s ease-in-out;
   opacity: 1;
 }
 
 .navContent {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   position: relative;
 }
 
 .logo {
-  transition: all 0.5s ease-in-out, margin-left 0.5s ease-in-out, margin-top 0.5s ease-in-out !important;
-  font-size: 1.75rem;
+  transition:
+    all 0.5s ease-in-out,
+    margin-left 0.5s ease-in-out,
+    margin-top 0.5s ease-in-out !important;
+  font-size: 1.5rem;
   letter-spacing: -0.02rem;
   font-weight: normal;
   width: max-content;
@@ -72,11 +83,9 @@
   color: black !important;
 }
 
-
 .forceWhite {
   color: white;
 }
-
 
 .hamburger {
   display: flex;
@@ -90,7 +99,6 @@
 .hamburgerVisible {
   opacity: 1; /* Se hace visible */
 }
-
 
 .menu {
   position: fixed;
@@ -112,7 +120,8 @@
 
 .menuItem {
   margin: 1.2rem 0;
-  font-size: 1.5rem;
+  font-size: 12pt;
+  text-transform: uppercase;
   text-decoration: none;
   color: black;
 }
@@ -127,7 +136,11 @@
 }
 
 .logoFinalDelayed {
-  transition: opacity 2s ease-in-out 1s, transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out !important; /* Add delay to opacity */
+  transition:
+    opacity 2s ease-in-out 1s,
+    transform 1s ease-in-out,
+    margin-left 1s ease-in-out,
+    margin-top 1s ease-in-out !important; /* Add delay to opacity */
   opacity: 1;
 }
 

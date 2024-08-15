@@ -6,6 +6,7 @@
 files=(
     "src/app/page.tsx"
     "src/app/portfolio/page.tsx"
+    "src/app/ClientLayout.tsx"
     "src/app/layout.tsx"
     "src/components/header.tsx"
     "src/components/header.module.css"

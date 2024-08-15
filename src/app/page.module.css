@@ -22,6 +22,13 @@
   z-index: -1;
 }
 
+.motto  {
+  font-size: 12pt;
+  text-transform: uppercase;
+  margin: 1rem 0;
+  text-align: center;
+}
+
 .button {
   padding: 10px 20px;
   margin: 10px;
