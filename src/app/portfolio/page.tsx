@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Container,
   Typography,
@@ -9,6 +9,8 @@ import {
   Box,
   Alert,
   CircularProgress,
+  createStyles,
+  withStyles,
 } from '@mui/material';
 import { getSettings } from '../../utils/getSettings';
 import { getPortfolio } from '../../utils/getPortfolio';
@@ -16,7 +18,6 @@ import styles from '../page.module.css';
 import Header from '../../components/header';
 
 import dynamic from 'next/dynamic';
-import { usePortfolio } from '@/context/PortfolioContext';
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), {
   ssr: false,
@@ -136,10 +137,16 @@ const Portfolio: React.FC = () => {
               sx={{
                 my: 2,
                 maxWidth: 300,
-                fontFamily: 'monospace',
                 letterSpacing: '0.1em',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderWidth: '1px',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderWidth: '1px', // Cambia el ancho del borde cuando está en foco
+                  },
+                },
                 input: {
-                  fontFamily: 'monospace',
                   letterSpacing: '0.1em',
                   WebkitTextSecurity: 'disc',
                   MozTextSecurity: 'disc',
@@ -147,6 +154,7 @@ const Portfolio: React.FC = () => {
                 },
               }}
             />
+
             <Button
               className={styles.submitButton}
               sx={{
