@@ -176,15 +176,17 @@ const Portfolio: React.FC = () => {
         </Box>
 
         <Box
+          className="LLLLL"
           sx={{
             opacity: isAuthenticated ? 1 : 0,
             transition: 'opacity 0.2s ease-in-out',
             zIndex: isAuthenticated ? 1 : -1,
             display: 'flex',
             flexDirection: 'column',
+
             alignItems: 'center',
             justifyContent: 'center',
-            height: isAuthenticated ? '100%' : '0 !important',
+            height: isAuthenticated ? '100rem' : '0 !important',
             overflow: isAuthenticated ? 'visible' : 'hidden',
             marginTop: '3rem',
             position: 'absolute',

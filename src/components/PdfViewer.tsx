@@ -37,7 +37,11 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ fileUrl }) => {
 
   return (
     <Box height={window.innerHeight} marginTop={0}>
-      <Document file={fileUrl} onLoadSuccess={onDocumentLoadSuccess}>
+      <Document
+        loading="Loading portfolio..."
+        file={fileUrl}
+        onLoadSuccess={onDocumentLoadSuccess}
+      >
         {Array.from(new Array(numPages), (el, index) => (
           <Page
             width={window.innerWidth - 0}
