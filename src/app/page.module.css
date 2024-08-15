@@ -38,6 +38,7 @@
   font-size: 12pt;
   text-transform: uppercase;
   text-align: center;
+  padding: 0 0.4rem;
 }
 
 .submitButton {

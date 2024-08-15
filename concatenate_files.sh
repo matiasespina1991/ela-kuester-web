@@ -11,6 +11,7 @@ files=(
     "src/components/header.tsx"
     "src/components/header.module.css"
     "src/styles/globals.css"
+    "src/utils/getPortfolio.ts"
 )
 
 # Archivo de salida

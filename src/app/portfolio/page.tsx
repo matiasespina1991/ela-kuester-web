@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import {
   Container,
   Typography,
@@ -16,6 +16,7 @@ import styles from '../page.module.css';
 import Header from '../../components/header';
 
 import dynamic from 'next/dynamic';
+import { usePortfolio } from '@/context/PortfolioContext';
 
 const PdfViewer = dynamic(() => import('../../components/PdfViewer'), {
   ssr: false,
@@ -37,14 +38,33 @@ const Portfolio: React.FC = () => {
     fetchSettings();
   }, []);
 
+  // useEffect(() => {
+  //   // const fetchPortfolio = async () => {
+  //   //   const portfolio = await getPortfolio();
+  //   //   if (portfolio) {
+  //   //     setPortfolioFile(portfolio.file_url);
+  //   //   }
+  //   // };
+  //   // fetchPortfolio();
+
+  //   var portfolio = usePortfolio();
+  //   set
+  // }, []);
+
   useEffect(() => {
-    const fetchPortfolio = async () => {
-      const portfolio = await getPortfolio();
-      if (portfolio) {
-        setPortfolioFile(portfolio.file_url);
+    const prefetchPortfolio = async () => {
+      const cachedPortfolio = sessionStorage.getItem('portfolioFile');
+      if (cachedPortfolio) {
+        setPortfolioFile(cachedPortfolio);
+      } else {
+        const portfolio = await getPortfolio();
+        if (portfolio) {
+          setPortfolioFile(portfolio.file_url);
+          sessionStorage.setItem('portfolioFile', portfolio.file_url); // Guardar en sessionStorage
+        }
       }
     };
-    fetchPortfolio();
+    prefetchPortfolio();
   }, []);
 
   const handlePasswordSubmit = () => {

@@ -16,7 +16,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
-  const [isOpen, setOpen] = useState<boolean>(false);
+  const [openHamburgerMenu, setOpenHamburgerMenu] = useState<boolean>(false);
   const pathname = usePathname();
   const [isWhite, setIsWhite] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
@@ -82,21 +82,21 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleLinkClick = () => {
+  const handleLinkClickMenuLink = () => {
     setTimeout(() => {
-      setOpen(false);
+      setOpenHamburgerMenu(false);
     }, 200);
   };
 
   return (
     <>
       <nav
-        className={`${styles.nav} ${isOpen ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}
+        className={`${styles.nav} ${openHamburgerMenu ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}
       >
         <div className={styles.navContent}>
           <Link
             href="/"
-            className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''}`}
+            className={`${styles.logo} ${logoClass} ${openHamburgerMenu ? styles.logoActive : ''}`}
           >
             <Stack whiteSpace={'pre-wrap'} direction="row">
               <motion.div>Ela </motion.div>
@@ -139,9 +139,13 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
               size={27}
               duration={0.4}
               rounded={true}
-              color={isOpen || !isWhite || !videoLoaded ? 'black' : 'black'}
-              toggled={isOpen}
-              toggle={setOpen}
+              color={
+                openHamburgerMenu || !isWhite || !videoLoaded
+                  ? 'black'
+                  : 'black'
+              }
+              toggled={openHamburgerMenu}
+              toggle={setOpenHamburgerMenu}
             />
           </div>
         </div>
@@ -150,7 +154,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             prefetch={true}
             href="/"
             className={styles.menuItem}
-            onClick={handleLinkClick}
+            onClick={handleLinkClickMenuLink}
           >
             Home
           </Link>
@@ -158,7 +162,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             prefetch={true}
             href="/fashion"
             className={styles.menuItem}
-            onClick={handleLinkClick}
+            onClick={handleLinkClickMenuLink}
           >
             Fashion
           </Link>
@@ -166,7 +170,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             prefetch={true}
             href="/art"
             className={styles.menuItem}
-            onClick={handleLinkClick}
+            onClick={handleLinkClickMenuLink}
           >
             Art
           </Link>
@@ -174,7 +178,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             prefetch={true}
             href="/portfolio"
             className={styles.menuItem}
-            onClick={handleLinkClick}
+            onClick={handleLinkClickMenuLink}
           >
             Portfolio
           </Link>
@@ -182,7 +186,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             prefetch={true}
             href="/about"
             className={styles.menuItem}
-            onClick={handleLinkClick}
+            onClick={handleLinkClickMenuLink}
           >
             About
           </Link>
@@ -190,7 +194,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             prefetch={true}
             href="/contact"
             className={styles.menuItem}
-            onClick={handleLinkClick}
+            onClick={handleLinkClickMenuLink}
           >
             Contact
           </Link>

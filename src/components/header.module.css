@@ -84,6 +84,7 @@
   text-decoration: none;
   z-index: 1000;
   color: var(--header-color, black);
+  text-decoration: none !important;
 }
 
 .logoActive {
@@ -153,4 +154,11 @@
 
 .logoInitialDelayed {
   opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .logoInitial {
+    transform: scale(1.2) !important;
+    margin-left: 24vw !important;
+  }
 }

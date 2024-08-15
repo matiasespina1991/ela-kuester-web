@@ -8,6 +8,7 @@ import Header from '../components/header';
 import { Typography } from '@mui/material';
 import { easeIn, easeOut, motion } from 'framer-motion';
 import { useFirstLoad } from '@/context/FirstLoadContext';
+import { getPortfolio } from '@/utils/getPortfolio';
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');

@@ -1,17 +1,20 @@
 // src/app/page.tsx
-"use client";
+'use client';
 
-import { use, useEffect, useState } from "react";
-import styles from "./page.module.css";
-import { getHomePageVideo } from "../utils/getHomePageVideo";
-import Header from "../components/header";
-import { Typography } from "@mui/material";
-import { easeIn, easeOut, motion } from "framer-motion";
+import { use, useEffect, useState } from 'react';
+import styles from './page.module.css';
+import { getHomePageVideo } from '../utils/getHomePageVideo';
+import Header from '../components/header';
+import { Typography } from '@mui/material';
+import { easeIn, easeOut, motion } from 'framer-motion';
+import { useFirstLoad } from '@/context/FirstLoadContext';
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
-  const [backgroundVideoLoaded, setBackgroundVideoLoaded] = useState<boolean>(false);
+  const [backgroundVideoLoaded, setBackgroundVideoLoaded] =
+    useState<boolean>(false);
   const [showMotto, setShowMotto] = useState<boolean>(false);
+  const { firstLoad, setFirstLoad } = useFirstLoad();
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -33,21 +36,30 @@ const Home: React.FC = () => {
     <>
       {/* <Header videoLoaded={backgroundVideoLoaded} /> */}
       <main className={styles.main}>
-        <motion.div 
-     
-    initial={{ opacity: 0, scale: 1 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{
-        duration: 0.2,
-        delay: 2.9,
-        ease:  easeIn,
-      }}
+        <motion.div
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 0.2,
+            delay: firstLoad ? 0 : 3.95,
+            ease: easeIn,
+          }}
         >
-          <Typography className={styles.motto}>LONDON BASED FASHION DESIGNER, STYLIST, AND ARTIST</Typography>
+          <Typography className={styles.motto}>
+            LONDON BASED FASHION DESIGNER, STYLIST, AND ARTIST
+          </Typography>
         </motion.div>
-        
+
         {videoUrl && (
-          <video onLoadedData={handleBackgroundVideoLoaded} preload="true" className={styles.backgroundVideo} autoPlay loop muted playsInline>
+          <video
+            onLoadedData={handleBackgroundVideoLoaded}
+            preload="true"
+            className={styles.backgroundVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
             <source src={videoUrl} type="video/mp4" />
           </video>
         )}
@@ -58,17 +70,28 @@ const Home: React.FC = () => {
 
 export default Home;
 
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Container, Typography, TextField, Button, Box, Alert, CircularProgress } from "@mui/material";
-import { getSettings } from "../../utils/getSettings";
-import { getPortfolio } from "../../utils/getPortfolio";
-import Header from "../../components/header";
+import { useState, useEffect } from 'react';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Alert,
+  CircularProgress,
+} from '@mui/material';
+import { getSettings } from '../../utils/getSettings';
+import { getPortfolio } from '../../utils/getPortfolio';
+import styles from '../page.module.css';
+import Header from '../../components/header';
 
 import dynamic from 'next/dynamic';
 
-const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
+const PdfViewer = dynamic(() => import('../../components/PdfViewer'), {
+  ssr: false,
+});
 
 const Portfolio: React.FC = () => {
   const [settings, setSettings] = useState<any>(null);
@@ -99,9 +122,8 @@ const Portfolio: React.FC = () => {
   const handlePasswordSubmit = () => {
     if (settings && settings.portfolio_password === password) {
       setTimeout(() => {
-           setAuthenticating(true);
+        setAuthenticating(true);
       }, 100);
-   
 
       setTimeout(() => {
         setIsAuthenticated(true);
@@ -121,7 +143,15 @@ const Portfolio: React.FC = () => {
 
   return (
     <>
-      <Container sx={{ mt: 4, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Container
+        sx={{
+          mt: 4,
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
         <Box
           sx={{
             position: 'absolute',
@@ -137,15 +167,23 @@ const Portfolio: React.FC = () => {
             zIndex: isAuthenticated ? -1 : 1,
           }}
         >
-          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
-            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center', fontSize:'1.1rem' }}>Enter password to access the portfolio</Typography>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ mt: 4 }}
+          >
+            <Typography className={styles.enterPasswordLabelText}>
+              Enter password to access the portfolio
+            </Typography>
             <TextField
               type="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={handleKeyDown}
               fullWidth
-              autoComplete='off'
+              autoComplete="off"
               size="small"
               sx={{
                 my: 2,
@@ -156,17 +194,28 @@ const Portfolio: React.FC = () => {
                   fontFamily: 'monospace',
                   letterSpacing: '0.1em',
                   WebkitTextSecurity: 'disc',
-                  MozTextSecurity: 'disc', 
-                  textSecurity: 'disc',  
+                  MozTextSecurity: 'disc',
+                  textSecurity: 'disc',
                 },
               }}
             />
-            <Button sx={{backgroundColor: authenticating ? "gray !important" : "black",
-            transition: 'background-color 0.4s ease-in-out',}} variant="contained" onClick={handlePasswordSubmit}>
+            <Button
+              className={styles.submitButton}
+              sx={{
+                backgroundColor: authenticating ? 'gray !important' : 'black',
+                transition: 'background-color 0.4s ease-in-out',
+              }}
+              variant="contained"
+              onClick={handlePasswordSubmit}
+            >
               Submit
               {/* {authenticating && <CircularProgress size={13} sx={{ ml: '0.4rem' }} color="inherit" />} */}
             </Button>
-            {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            {error && (
+              <Alert severity="error" sx={{ mt: 2 }}>
+                {error}
+              </Alert>
+            )}
           </Box>
         </Box>
 
@@ -179,11 +228,11 @@ const Portfolio: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: isAuthenticated ?'100%' : '0 !important',
+            height: isAuthenticated ? '100%' : '0 !important',
             overflow: isAuthenticated ? 'visible' : 'hidden',
             marginTop: '3rem',
             position: 'absolute',
-         
+
             top: 0,
             left: 0,
             width: '100%',
@@ -201,8 +250,15 @@ const Portfolio: React.FC = () => {
                 height: '100%',
               }}
             >
-              <Typography variant="h6">No portfolio yet. Come back later!</Typography>
-              <Button variant="contained" color="primary" href="/" sx={{ mt: 2 }}>
+              <Typography variant="h6">
+                No portfolio yet. Come back later!
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                href="/"
+                sx={{ mt: 2 }}
+              >
                 Go Home
               </Button>
             </Box>
@@ -227,6 +283,7 @@ import localFont from 'next/font/local';
 import PageTransition from '../components/PageTransition';
 import { AnimatePresence } from 'framer-motion';
 import { useRouter } from "next/router";
+import { FirstLoadProvider } from "@/context/FirstLoadContext";
 
 const neueHaasDisplay = localFont({
   src: [
@@ -255,18 +312,11 @@ interface ClientLayoutProps {
 }
 
 const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
-  const [firstLoad, setFirstLoad] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (!firstLoad) {
-      setFirstLoad(true);
-    }
-  }, [firstLoad]);
-
  
 
   return (
     <ThemeProvider theme={theme}>
+       <FirstLoadProvider>
       <CssBaseline />
       <Header videoLoaded={true} />
       <AnimatePresence mode="wait">
@@ -275,6 +325,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
         
         </PageTransition>
       </AnimatePresence>
+      </FirstLoadProvider>
     </ThemeProvider>
   );
 };
@@ -284,6 +335,7 @@ export default ClientLayout;
 // src/app/layout.tsx
 import { ReactNode } from "react";
 import ClientLayout from './ClientLayout';
+import { FirstLoadProvider } from "@/context/FirstLoadContext";
 
 export const metadata = {
   title: "Ela Kuester",
@@ -294,16 +346,18 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html style={{ height: '100%' }} lang="en">
       <body style={{ height: '100%' }}>
+         
         <ClientLayout>
           {children}
         </ClientLayout>
+
       </body>
     </html>
   );
 }
 
 // src/components/header.tsx
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -311,6 +365,9 @@ import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
 import path from 'path';
+import { motion } from 'framer-motion';
+import { Box, Stack } from '@mui/material';
+import { useFirstLoad } from '@/context/FirstLoadContext';
 
 interface HeaderProps {
   videoLoaded: boolean;
@@ -327,6 +384,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [hamburgerClass, setHamburgerClass] = useState<string>(
     pathname === '/' ? styles.hamburgerHidden : styles.hamburgerVisible
   );
+  const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const whiteRoutes = ['/'];
@@ -357,39 +415,31 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     };
   }, []);
 
-
-
-  
   useEffect(() => {
+    if (pathname === '/') {
+      // Change logo class after a delay to trigger the transition
+      const timeout = setTimeout(() => {
+        setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
+      }, 500); // delay of 0.5 seconds
 
-    if(pathname === '/') {
-
-   
-
-    // Change logo class after a delay to trigger the transition
-    const timeout = setTimeout(() => {
-      setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
-    }, 500); // delay of 1.5 seconds
-
-    return () => clearTimeout(timeout);
-
-     }
+      return () => clearTimeout(timeout);
+    }
   }, []);
 
   useEffect(() => {
-
-    
     // Change logo class to final after an additional delay
     const timeout = setTimeout(() => {
       setLogoClass(styles.logoFinal);
       setHamburgerClass(styles.hamburgerVisible); // Mostrar el hamburger después de la animación del logo
-    }, 2500); // delay of 3 seconds
+    }, 3500); // delay of 3 seconds
+
+    const timeout2 = setTimeout(() => {
+      setFinishedLoading(true);
+    }, 6000); // delay of 4 seconds
 
     return () => clearTimeout(timeout);
   }, []);
 
-
-   
   const handleLinkClick = () => {
     setTimeout(() => {
       setOpen(false);
@@ -398,22 +448,110 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
 
   return (
     <>
-      <nav className={`${styles.nav} ${isOpen ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}>
+      <nav
+        className={`${styles.nav} ${isOpen ? styles.active : ''} ${isVisible ? styles.visible : styles.hidden}`}
+      >
         <div className={styles.navContent}>
-          <Link href="/" className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''}`}>
-            Ela Kuester
+          <Link
+            href="/"
+            className={`${styles.logo} ${logoClass} ${isOpen ? styles.logoActive : ''}`}
+          >
+            <Stack whiteSpace={'pre-wrap'} direction="row">
+              <motion.div>Ela </motion.div>
+              <Box position="relative">
+                {!finishedLoading && pathname === '/' ? (
+                  <>
+                    <motion.div
+                      style={{ position: 'absolute', top: 0, left: 0 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 1] }}
+                      transition={{ delay: 1.6 }}
+                    >
+                      K
+                    </motion.div>
+                    <motion.div
+                      style={{ position: 'absolute', top: 0, left: 15.5 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 1, 0] }}
+                      transition={{ delay: 1.6, duration: 1, ease: 'easeOut' }}
+                    >
+                      üster
+                    </motion.div>
+                    <motion.div
+                      style={{ position: 'absolute', top: 0, left: 15.5 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 2.2, duration: 1, ease: 'easeIn' }}
+                    >
+                      uester
+                    </motion.div>
+                  </>
+                ) : (
+                  <>Kuester</>
+                )}
+              </Box>
+            </Stack>
           </Link>
           <div className={`${styles.hamburger} ${hamburgerClass}`}>
-            <Hamburger size={27}  duration={0.4} rounded={true} color={isOpen || !isWhite || !videoLoaded ? 'black' : 'black'} toggled={isOpen} toggle={setOpen} />
+            <Hamburger
+              size={27}
+              duration={0.4}
+              rounded={true}
+              color={isOpen || !isWhite || !videoLoaded ? 'black' : 'black'}
+              toggled={isOpen}
+              toggle={setOpen}
+            />
           </div>
         </div>
         <div className={styles.menu}>
-          <Link prefetch={true} href="/" className={styles.menuItem} onClick={handleLinkClick}>Home</Link>
-          <Link prefetch={true} href="/fashion" className={styles.menuItem} onClick={handleLinkClick}>Fashion</Link>
-          <Link prefetch={true} href="/art" className={styles.menuItem} onClick={handleLinkClick}>Art</Link>
-          <Link prefetch={true} href="/portfolio" className={styles.menuItem} onClick={handleLinkClick}>Portfolio</Link>
-          <Link prefetch={true} href="/about" className={styles.menuItem} onClick={handleLinkClick}>About</Link>
-          <Link prefetch={true} href="/contact" className={styles.menuItem} onClick={handleLinkClick}>Contact</Link>
+          <Link
+            prefetch={true}
+            href="/"
+            className={styles.menuItem}
+            onClick={handleLinkClick}
+          >
+            Home
+          </Link>
+          <Link
+            prefetch={true}
+            href="/fashion"
+            className={styles.menuItem}
+            onClick={handleLinkClick}
+          >
+            Fashion
+          </Link>
+          <Link
+            prefetch={true}
+            href="/art"
+            className={styles.menuItem}
+            onClick={handleLinkClick}
+          >
+            Art
+          </Link>
+          <Link
+            prefetch={true}
+            href="/portfolio"
+            className={styles.menuItem}
+            onClick={handleLinkClick}
+          >
+            Portfolio
+          </Link>
+          <Link
+            prefetch={true}
+            href="/about"
+            className={styles.menuItem}
+            onClick={handleLinkClick}
+          >
+            About
+          </Link>
+          <Link
+            prefetch={true}
+            href="/contact"
+            className={styles.menuItem}
+            onClick={handleLinkClick}
+          >
+            Contact
+          </Link>
         </div>
       </nav>
     </>
@@ -431,7 +569,7 @@ export default Header;
   z-index: 1000;
   font-family: 'NeueHaasDisplay', sans-serif;
   letter-spacing: 0.02rem;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
   padding: 1.8rem 2.7rem;
 }
 
@@ -444,20 +582,31 @@ export default Header;
 }
 
 .nav a {
-  transition: text-shadow 0.2s ease;
+  transition: text-decoration-color 0.3s ease;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 0);
+  text-underline-offset: 0.3rem;
+  text-decoration-thickness: 0.12rem;
 }
 
 .nav a:hover {
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  /* text-shadow: 0 0 2px rgba(0, 0, 0, 0.3); */
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 1);
+  text-decoration-thickness: 0.12rem;
 }
 /* src/components/header.module.css */
 
 .logoInitial {
   position: relative;
   transform: translate(-50%, -50%) scale(3);
-  margin-left: 46vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
-  margin-top: 48vh;  /* Ajusta el margen superior para centrar verticalmente */
-  transition: transform 0.5s ease-in-out, margin-left 0.5s ease-in-out, margin-top 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  margin-left: 39.5vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
+  margin-top: 48vh; /* Ajusta el margen superior para centrar verticalmente */
+  transition:
+    transform 0.5s ease-in-out,
+    margin-left 0.5s ease-in-out,
+    margin-top 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
   opacity: 0; /* Inicia con opacidad 0 */
 }
 
@@ -469,8 +618,12 @@ export default Header;
   position: relative;
   transform: translate(0, 0) scale(1);
   margin-left: 0; /* Resetea el margen izquierdo */
-  margin-top: 0;  /* Resetea el margen superior */
-  transition: transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out, opacity 1s ease-in-out;
+  margin-top: 0; /* Resetea el margen superior */
+  transition:
+    transform 1s ease-in-out,
+    margin-left 1s ease-in-out,
+    margin-top 1s ease-in-out,
+    opacity 1s ease-in-out;
   opacity: 1;
 }
 
@@ -482,25 +635,27 @@ export default Header;
 }
 
 .logo {
-  transition: all 0.5s ease-in-out, margin-left 0.5s ease-in-out, margin-top 0.5s ease-in-out !important;
-  font-size: 1.50rem;
+  transition:
+    all 0.5s ease-in-out,
+    margin-left 0.5s ease-in-out,
+    margin-top 0.5s ease-in-out !important;
+  font-size: 1.5rem;
   letter-spacing: -0.02rem;
   font-weight: normal;
   width: max-content;
   text-decoration: none;
   z-index: 1000;
   color: var(--header-color, black);
+  text-decoration: none !important;
 }
 
 .logoActive {
   color: black !important;
 }
 
-
 .forceWhite {
   color: white;
 }
-
 
 .hamburger {
   display: flex;
@@ -514,7 +669,6 @@ export default Header;
 .hamburgerVisible {
   opacity: 1; /* Se hace visible */
 }
-
 
 .menu {
   position: fixed;
@@ -552,7 +706,11 @@ export default Header;
 }
 
 .logoFinalDelayed {
-  transition: opacity 2s ease-in-out 1s, transform 1s ease-in-out, margin-left 1s ease-in-out, margin-top 1s ease-in-out !important; /* Add delay to opacity */
+  transition:
+    opacity 2s ease-in-out 1s,
+    transform 1s ease-in-out,
+    margin-left 1s ease-in-out,
+    margin-top 1s ease-in-out !important; /* Add delay to opacity */
   opacity: 1;
 }
 
@@ -787,4 +945,30 @@ a {
     color-scheme: dark;
   }
 }
+
+import { collection, db, getDocs, limit, orderBy, query, where } from "./firebase";
+
+interface Portfolio {
+  active: boolean;
+  created_at: any; // Puedes usar Timestamp si lo importas de firebase/firestore
+  file_url: string;
+  name: string;
+}
+
+export const getPortfolio = async (): Promise<Portfolio | null> => {
+  const q = query(
+    collection(db, 'portfolio'),
+    where('active', '==', true),
+    orderBy('created_at', 'desc'),
+    limit(1)
+  );
+
+  const querySnapshot = await getDocs(q);
+  if (querySnapshot.empty) {
+    return null;
+  }
+
+  const doc = querySnapshot.docs[0];
+  return doc.data() as Portfolio;
+};
 
