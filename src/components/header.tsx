@@ -36,25 +36,27 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    const handleScroll = () => {
-      setIsVisible(false);
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => setIsVisible(true), 300);
-    };
+    if (pathname === '/portfolio') {
+      const handleScroll = () => {
+        setIsVisible(false);
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => setIsVisible(true), 300);
+      };
 
-    const handleMouseMove = () => {
-      setIsVisible(true);
-      clearTimeout(timeoutId);
-    };
+      const handleMouseMove = () => {
+        setIsVisible(true);
+        clearTimeout(timeoutId);
+      };
 
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('scroll', handleScroll);
+      window.addEventListener('mousemove', handleMouseMove);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-      clearTimeout(timeoutId);
-    };
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('mousemove', handleMouseMove);
+        clearTimeout(timeoutId);
+      };
+    }
   }, []);
 
   useEffect(() => {
