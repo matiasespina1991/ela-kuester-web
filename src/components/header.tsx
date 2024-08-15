@@ -9,6 +9,7 @@ import styles from './header.module.css';
 import path from 'path';
 import { motion } from 'framer-motion';
 import { Box, Stack } from '@mui/material';
+import { useFirstLoad } from '@/context/FirstLoadContext';
 
 interface HeaderProps {
   videoLoaded: boolean;
@@ -25,6 +26,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [hamburgerClass, setHamburgerClass] = useState<string>(
     pathname === '/' ? styles.hamburgerHidden : styles.hamburgerVisible
   );
+  const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const whiteRoutes = ['/'];
@@ -73,6 +75,10 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
       setHamburgerClass(styles.hamburgerVisible); // Mostrar el hamburger después de la animación del logo
     }, 3500); // delay of 3 seconds
 
+    const timeout2 = setTimeout(() => {
+      setFinishedLoading(true);
+    }, 6000); // delay of 4 seconds
+
     return () => clearTimeout(timeout);
   }, []);
 
@@ -95,30 +101,36 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             <Stack whiteSpace={'pre-wrap'} direction="row">
               <motion.div>Ela </motion.div>
               <Box position="relative">
-                <motion.div
-                  style={{ position: 'absolute', top: 0, left: 0 }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1] }}
-                  transition={{ delay: 1.6 }}
-                >
-                  K
-                </motion.div>
-                <motion.div
-                  style={{ position: 'absolute', top: 0, left: 15.5 }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 1, 0] }}
-                  transition={{ delay: 1.6, duration: 1, ease: 'easeOut' }}
-                >
-                  üster
-                </motion.div>
-                <motion.div
-                  style={{ position: 'absolute', top: 0, left: 15.5 }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 2.2, duration: 1, ease: 'easeIn' }}
-                >
-                  uester
-                </motion.div>
+                {!finishedLoading && pathname === '/' ? (
+                  <>
+                    <motion.div
+                      style={{ position: 'absolute', top: 0, left: 0 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 1] }}
+                      transition={{ delay: 1.6 }}
+                    >
+                      K
+                    </motion.div>
+                    <motion.div
+                      style={{ position: 'absolute', top: 0, left: 15.5 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0, 1, 0] }}
+                      transition={{ delay: 1.6, duration: 1, ease: 'easeOut' }}
+                    >
+                      üster
+                    </motion.div>
+                    <motion.div
+                      style={{ position: 'absolute', top: 0, left: 15.5 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 2.2, duration: 1, ease: 'easeIn' }}
+                    >
+                      uester
+                    </motion.div>
+                  </>
+                ) : (
+                  <>Kuester</>
+                )}
               </Box>
             </Stack>
           </Link>

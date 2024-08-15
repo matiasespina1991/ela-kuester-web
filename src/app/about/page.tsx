@@ -1,68 +1,65 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import styles from "../page.module.css";
-import { db, collection, getDocs } from "../../utils/firebase";
-import { useEffect, useState } from "react";
-import Header from "../../components/header";
-import { getAboutDescription } from "@/utils/getAboutDescription";
-import { use } from "react";
-import { motion } from "framer-motion";
-import { Box, Typography } from "@mui/material";
+import Link from 'next/link';
+import styles from '../page.module.css';
+import { db, collection, getDocs } from '../../utils/firebase';
+import { useEffect, useState } from 'react';
+import Header from '../../components/header';
+import { getAboutDescription } from '@/utils/getAboutDescription';
+import { use } from 'react';
+import { motion } from 'framer-motion';
+import { Box, Typography } from '@mui/material';
 
 const About = () => {
   const [aboutDescription, setAboutDescription] = useState('');
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchAboutDescription = async () => {
+      const aboutDescription = await getAboutDescription();
 
-useEffect(() => {
-  const fetchAboutDescription = async () => {
-    const aboutDescription = await getAboutDescription();
-    
-    setAboutDescription(aboutDescription);
-    setLoading(false);
-  };
-  fetchAboutDescription();
-}
-, []);
+      setAboutDescription(aboutDescription);
+      setLoading(false);
+    };
+    fetchAboutDescription();
+  }, []);
 
   return (
     <>
       <main className={styles.main}>
         <Box
           sx={{
-            pt: "10rem",
-            px: "1.6rem",
-        
-            display: "flex",
-            flexDirection: "column",
-            height: "100vh",
-            width: "100%",
+            pt: '35vh',
+            px: '1.6rem',
+
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100vh',
+            width: '100%',
           }}
         >
-        <motion.div style={{opacity: 0}} animate={{ opacity: loading ? 0 : 1 }}>
-            <Typography variant="h3">About</Typography>
-        </motion.div>
-        <Box
-        sx={{pt: "1rem"}}
-        >
+          <Box sx={{ pt: '1rem' }}></Box>
 
-        </Box>
+          <motion.div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            animate={{ opacity: loading ? 0 : 1 }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                maxWidth: '45rem',
 
-        <motion.div    animate={{ opacity: loading ? 0 : 1 }}>
-           <Typography variant="h6" sx={{
-            maxWidth: "37rem",
-            
-            lineHeight: "1.8rem",
-           }}>
-          {aboutDescription}
+                lineHeight: '1.8rem',
+              }}
+            >
+              {aboutDescription}
             </Typography>
-        </motion.div>
+          </motion.div>
         </Box>
-       
-        
-       
-        
       </main>
     </>
   );

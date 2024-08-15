@@ -1,14 +1,25 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Container, Typography, TextField, Button, Box, Alert, CircularProgress } from "@mui/material";
-import { getSettings } from "../../utils/getSettings";
-import { getPortfolio } from "../../utils/getPortfolio";
-import Header from "../../components/header";
+import { useState, useEffect } from 'react';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+  Box,
+  Alert,
+  CircularProgress,
+} from '@mui/material';
+import { getSettings } from '../../utils/getSettings';
+import { getPortfolio } from '../../utils/getPortfolio';
+import styles from '../page.module.css';
+import Header from '../../components/header';
 
 import dynamic from 'next/dynamic';
 
-const PdfViewer = dynamic(() => import('../../components/PdfViewer'), { ssr: false });
+const PdfViewer = dynamic(() => import('../../components/PdfViewer'), {
+  ssr: false,
+});
 
 const Portfolio: React.FC = () => {
   const [settings, setSettings] = useState<any>(null);
@@ -39,9 +50,8 @@ const Portfolio: React.FC = () => {
   const handlePasswordSubmit = () => {
     if (settings && settings.portfolio_password === password) {
       setTimeout(() => {
-           setAuthenticating(true);
+        setAuthenticating(true);
       }, 100);
-   
 
       setTimeout(() => {
         setIsAuthenticated(true);
@@ -61,7 +71,15 @@ const Portfolio: React.FC = () => {
 
   return (
     <>
-      <Container sx={{ mt: 4, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Container
+        sx={{
+          mt: 4,
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
         <Box
           sx={{
             position: 'absolute',
@@ -77,15 +95,23 @@ const Portfolio: React.FC = () => {
             zIndex: isAuthenticated ? -1 : 1,
           }}
         >
-          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" sx={{ mt: 4 }}>
-            <Typography sx={{ fontFamily: 'monospace', textAlign: 'center', fontSize:'1.1rem' }}>Enter password to access the portfolio</Typography>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ mt: 4 }}
+          >
+            <Typography className={styles.enterPasswordLabelText}>
+              Enter password to access the portfolio
+            </Typography>
             <TextField
               type="text"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={handleKeyDown}
               fullWidth
-              autoComplete='off'
+              autoComplete="off"
               size="small"
               sx={{
                 my: 2,
@@ -96,17 +122,28 @@ const Portfolio: React.FC = () => {
                   fontFamily: 'monospace',
                   letterSpacing: '0.1em',
                   WebkitTextSecurity: 'disc',
-                  MozTextSecurity: 'disc', 
-                  textSecurity: 'disc',  
+                  MozTextSecurity: 'disc',
+                  textSecurity: 'disc',
                 },
               }}
             />
-            <Button sx={{backgroundColor: authenticating ? "gray !important" : "black",
-            transition: 'background-color 0.4s ease-in-out',}} variant="contained" onClick={handlePasswordSubmit}>
+            <Button
+              className={styles.submitButton}
+              sx={{
+                backgroundColor: authenticating ? 'gray !important' : 'black',
+                transition: 'background-color 0.4s ease-in-out',
+              }}
+              variant="contained"
+              onClick={handlePasswordSubmit}
+            >
               Submit
               {/* {authenticating && <CircularProgress size={13} sx={{ ml: '0.4rem' }} color="inherit" />} */}
             </Button>
-            {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+            {error && (
+              <Alert severity="error" sx={{ mt: 2 }}>
+                {error}
+              </Alert>
+            )}
           </Box>
         </Box>
 
@@ -119,11 +156,11 @@ const Portfolio: React.FC = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: isAuthenticated ?'100%' : '0 !important',
+            height: isAuthenticated ? '100%' : '0 !important',
             overflow: isAuthenticated ? 'visible' : 'hidden',
             marginTop: '3rem',
             position: 'absolute',
-         
+
             top: 0,
             left: 0,
             width: '100%',
@@ -141,8 +178,15 @@ const Portfolio: React.FC = () => {
                 height: '100%',
               }}
             >
-              <Typography variant="h6">No portfolio yet. Come back later!</Typography>
-              <Button variant="contained" color="primary" href="/" sx={{ mt: 2 }}>
+              <Typography variant="h6">
+                No portfolio yet. Come back later!
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                href="/"
+                sx={{ mt: 2 }}
+              >
                 Go Home
               </Button>
             </Box>
