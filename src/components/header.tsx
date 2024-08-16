@@ -34,6 +34,13 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   );
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
 
+  // useEffect(() => {
+  //   if (pathname === '/' && page == 'home') {
+  //     setLogoClass(styles.logoFinal);
+  //     setHamburgerClass(styles.hamburgerVisible);
+  //   }
+  // }, [pathname, page]);
+
   useEffect(() => {
     const whiteRoutes = ['/'];
     if (pathname) {
@@ -64,6 +71,8 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
         window.removeEventListener('mousemove', handleMouseMove);
         clearTimeout(timeoutId);
       };
+    } else {
+      setIsVisible(true);
     }
   }, [pathname]);
 

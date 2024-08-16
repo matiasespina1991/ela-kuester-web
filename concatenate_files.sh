@@ -5,11 +5,12 @@
 # Nombres de los archivos del proyecto Next.js
 files=(
     "src/app/page.tsx"
-    "src/pages/portfolio/page.tsx"
+    "src/app/portfolio/page.tsx"
     "src/app/ClientLayout.tsx"
     "src/app/layout.tsx"
     "src/components/header.tsx"
     "src/components/header.module.css"
+    "src/components/PdfViewer.tsx"
     "src/styles/globals.css"
     "src/utils/getPortfolio.ts"
 )

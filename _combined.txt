@@ -9,11 +9,17 @@ import { Typography } from '@mui/material';
 import { easeIn, easeOut, motion } from 'framer-motion';
 import { useFirstLoad } from '@/context/FirstLoadContext';
 import { getPortfolio } from '@/utils/getPortfolio';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [backgroundVideoLoaded, setBackgroundVideoLoaded] =
     useState<boolean>(false);
+
+  const searchParams = useSearchParams();
+
+  const page = searchParams?.get('page');
   const [showMotto, setShowMotto] = useState<boolean>(false);
   const { firstLoad, setFirstLoad } = useFirstLoad();
 
@@ -34,38 +40,35 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <>
-      {/* <Header videoLoaded={backgroundVideoLoaded} /> */}
-      <main className={styles.main}>
-        <motion.div
-          initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.2,
-            delay: firstLoad ? 0 : 3.95,
-            ease: easeIn,
-          }}
-        >
-          <Typography className={styles.motto}>
-            LONDON BASED FASHION DESIGNER, STYLIST, AND ARTIST
-          </Typography>
-        </motion.div>
+    <main className={styles.main}>
+      <motion.div
+        initial={{ opacity: page != 'home' ? 0 : 1, scale: 1 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.2,
+          delay: firstLoad ? 0 : 3.95,
+          ease: easeIn,
+        }}
+      >
+        <Typography className={styles.motto}>
+          LONDON BASED FASHION DESIGNER, STYLIST, AND ARTIST
+        </Typography>
+      </motion.div>
 
-        {videoUrl && (
-          <video
-            onLoadedData={handleBackgroundVideoLoaded}
-            preload="true"
-            className={styles.backgroundVideo}
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src={videoUrl} type="video/mp4" />
-          </video>
-        )}
-      </main>
-    </>
+      {videoUrl && (
+        <video
+          onLoadedData={handleBackgroundVideoLoaded}
+          preload="true"
+          className={styles.backgroundVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      )}
+    </main>
   );
 };
 
@@ -260,7 +263,7 @@ const Portfolio: React.FC = () => {
 
             alignItems: 'center',
             justifyContent: 'center',
-            height: isAuthenticated ? '100rem' : '0 !important',
+            height: isAuthenticated ? '50rem' : '0 !important',
             overflow: isAuthenticated ? 'visible' : 'hidden',
             marginTop: '3rem',
             position: 'absolute',
@@ -395,7 +398,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
 export default ClientLayout;
 
 // src/app/layout.tsx
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import ClientLayout from './ClientLayout';
 import { FirstLoadProvider } from '@/context/FirstLoadContext';
 
@@ -416,7 +419,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html style={{ height: '100%' }} lang="en">
       <body style={{ height: '100%' }}>
-        <ClientLayout>{children}</ClientLayout>
+        <Suspense fallback={<div className="loading-page-suspense"></div>}>
+          <ClientLayout>{children}</ClientLayout>
+        </Suspense>
       </body>
     </html>
   );
@@ -425,15 +430,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 // src/components/header.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
-import path from 'path';
+
 import { motion } from 'framer-motion';
 import { Box, Stack } from '@mui/material';
-import { useFirstLoad } from '@/context/FirstLoadContext';
+import { useSearchParams } from 'next/navigation';
 
 interface HeaderProps {
   videoLoaded: boolean;
@@ -442,25 +447,33 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [openHamburgerMenu, setOpenHamburgerMenu] = useState<boolean>(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = searchParams?.get('page');
+
   const [isWhite, setIsWhite] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [logoClass, setLogoClass] = useState<string>(
-    pathname === '/' ? styles.logoInitial : styles.logoFinal
+    pathname === '/' && page != 'home' ? styles.logoInitial : styles.logoFinal
   );
   const [hamburgerClass, setHamburgerClass] = useState<string>(
-    pathname === '/' ? styles.hamburgerHidden : styles.hamburgerVisible
+    pathname === '/' && page != 'home'
+      ? styles.hamburgerHidden
+      : styles.hamburgerVisible
   );
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const whiteRoutes = ['/'];
-    setIsWhite(whiteRoutes.includes(pathname));
+    if (pathname) {
+      setIsWhite(whiteRoutes.includes(pathname));
+    }
   }, [pathname]);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    if (pathname === '/portfolio') {
+    if (pathname === '/portfolio/') {
       const handleScroll = () => {
         setIsVisible(false);
         clearTimeout(timeoutId);
@@ -481,31 +494,32 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
         clearTimeout(timeoutId);
       };
     }
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
-    if (pathname === '/') {
-      // Change logo class after a delay to trigger the transition
+    if (pathname === '/' && page != 'home') {
       const timeout = setTimeout(() => {
         setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
-      }, 500); // delay of 0.5 seconds
+      }, 500);
 
       return () => clearTimeout(timeout);
     }
-  }, []);
+  }, [pathname, page]);
 
   useEffect(() => {
-    // Change logo class to final after an additional delay
     const timeout = setTimeout(() => {
       setLogoClass(styles.logoFinal);
-      setHamburgerClass(styles.hamburgerVisible); // Mostrar el hamburger después de la animación del logo
-    }, 3500); // delay of 3 seconds
+      setHamburgerClass(styles.hamburgerVisible);
+    }, 3500);
 
     const timeout2 = setTimeout(() => {
       setFinishedLoading(true);
-    }, 6000); // delay of 4 seconds
+    }, 6000);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(timeout2);
+    };
   }, []);
 
   const handleLinkClickMenuLink = () => {
@@ -521,13 +535,13 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
       >
         <div className={styles.navContent}>
           <Link
-            href="/"
+            href="/?page=home"
             className={`${styles.logo} ${logoClass} ${openHamburgerMenu ? styles.logoActive : ''}`}
           >
             <Stack whiteSpace={'pre-wrap'} direction="row">
               <motion.div>Ela </motion.div>
               <Box position="relative">
-                {!finishedLoading && pathname === '/' ? (
+                {!finishedLoading && pathname === '/' && page !== 'home' ? (
                   <>
                     <motion.div
                       style={{ position: 'absolute', top: 0, left: 0 }}
@@ -578,7 +592,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
         <div className={styles.menu}>
           <Link
             prefetch={true}
-            href="/"
+            href="/?page=home"
             className={styles.menuItem}
             onClick={handleLinkClickMenuLink}
           >
@@ -673,7 +687,7 @@ export default Header;
   position: relative;
   transform: translate(-50%, -50%) scale(3);
   margin-left: 39.5vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
-  margin-top: 47vh; /* Ajusta el margen superior para centrar verticalmente */
+  margin-top: 46vh; /* Ajusta el margen superior para centrar verticalmente */
   transition:
     transform 0.5s ease-in-out,
     margin-left 0.5s ease-in-out,
@@ -797,12 +811,123 @@ export default Header;
   }
 }
 
+'use client';
+
+import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+
+if (typeof Promise.withResolvers === 'undefined') {
+  if (window)
+    // @ts-expect-error This does not exist outside of polyfill which this is doing
+    window.Promise.withResolvers = function () {
+      let resolve, reject;
+      const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, resolve, reject };
+    };
+}
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/legacy/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString();
+
+interface PdfViewerProps {
+  fileUrl: string;
+}
+
+const PdfViewer: React.FC<PdfViewerProps> = ({ fileUrl }) => {
+  const [numPages, setNumPages] = useState<number>();
+
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }): void => {
+    setNumPages(numPages);
+  };
+
+  return (
+    <Box height={window.innerHeight} marginTop={0}>
+      <Document
+        loading={
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '43vh',
+              transform: 'translateX(-46%)',
+            }}
+          >
+            <Stack
+              alignContent="center"
+              justifyContent="center"
+              alignItems="center"
+              spacing={3}
+            >
+              <CircularProgress size={30} sx={{ opacity: 0.7 }} />
+              <Stack
+                alignContent="center"
+                justifyContent="center"
+                alignItems="center"
+                spacing={0.5}
+              >
+                <Typography textTransform="uppercase" variant="body1">
+                  loading portfolio...
+                </Typography>
+                <Typography textTransform="uppercase" variant="body1">
+                  Please wait.
+                </Typography>
+              </Stack>
+            </Stack>
+          </Box>
+        }
+        file={fileUrl}
+        noData={
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '43vh',
+              transform: 'translateX(-46%)',
+            }}
+          >
+            <Stack
+              alignContent="center"
+              justifyContent="center"
+              alignItems="center"
+              spacing={0.5}
+            >
+              <Typography textTransform="uppercase" variant="body1">
+                No portfolio found.
+              </Typography>
+              <Typography textTransform="uppercase" variant="body1">
+                {':('}
+              </Typography>
+            </Stack>
+          </Box>
+        }
+        onLoadSuccess={onDocumentLoadSuccess}
+      >
+        {Array.from(new Array(numPages), (el, index) => (
+          <Page
+            width={window.innerWidth - 0}
+            key={`page_${index + 1}`}
+            pageNumber={index + 1}
+          />
+        ))}
+      </Document>
+    </Box>
+  );
+};
+
+export default PdfViewer;
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
-    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
-    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
+    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
+    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -951,8 +1076,6 @@ export default Header;
   font-style: italic;
 }
 
-
-
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -1000,10 +1123,8 @@ body {
 }
 
 body {
- 
   font-family: 'NeueHaasDisplay', sans-serif;
 
-  
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -1017,7 +1138,6 @@ a {
   color: inherit;
   text-decoration: none;
 }
-
 
 @media (prefers-color-scheme: dark) {
   html {
