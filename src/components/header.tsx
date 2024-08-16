@@ -1,15 +1,15 @@
 // src/components/header.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
-import path from 'path';
+
 import { motion } from 'framer-motion';
 import { Box, Stack } from '@mui/material';
-import { useFirstLoad } from '@/context/FirstLoadContext';
+import { useSearchParams } from 'next/navigation';
 
 interface HeaderProps {
   videoLoaded: boolean;
@@ -18,13 +18,19 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [openHamburgerMenu, setOpenHamburgerMenu] = useState<boolean>(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const page = searchParams?.get('page');
+
   const [isWhite, setIsWhite] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [logoClass, setLogoClass] = useState<string>(
-    pathname === '/' ? styles.logoInitial : styles.logoFinal
+    pathname === '/' && page != 'home' ? styles.logoInitial : styles.logoFinal
   );
   const [hamburgerClass, setHamburgerClass] = useState<string>(
-    pathname === '/' ? styles.hamburgerHidden : styles.hamburgerVisible
+    pathname === '/' && page != 'home'
+      ? styles.hamburgerHidden
+      : styles.hamburgerVisible
   );
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
 
@@ -38,7 +44,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    if (pathname === '/portfolio') {
+    if (pathname === '/portfolio/') {
       const handleScroll = () => {
         setIsVisible(false);
         clearTimeout(timeoutId);
@@ -62,7 +68,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   }, []);
 
   useEffect(() => {
-    if (pathname === '/') {
+    if (pathname === '/' && page != 'home') {
       // Change logo class after a delay to trigger the transition
       const timeout = setTimeout(() => {
         setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
@@ -105,7 +111,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             <Stack whiteSpace={'pre-wrap'} direction="row">
               <motion.div>Ela </motion.div>
               <Box position="relative">
-                {!finishedLoading && pathname === '/' ? (
+                {!finishedLoading && pathname === '/' && page !== 'home' ? (
                   <>
                     <motion.div
                       style={{ position: 'absolute', top: 0, left: 0 }}
@@ -156,7 +162,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
         <div className={styles.menu}>
           <Link
             prefetch={true}
-            href="/"
+            href="/?page=home"
             className={styles.menuItem}
             onClick={handleLinkClickMenuLink}
           >

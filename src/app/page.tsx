@@ -9,11 +9,16 @@ import { Typography } from '@mui/material';
 import { easeIn, easeOut, motion } from 'framer-motion';
 import { useFirstLoad } from '@/context/FirstLoadContext';
 import { getPortfolio } from '@/utils/getPortfolio';
+import { useSearchParams } from 'next/navigation';
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [backgroundVideoLoaded, setBackgroundVideoLoaded] =
     useState<boolean>(false);
+
+  const searchParams = useSearchParams();
+
+  const page = searchParams?.get('page');
   const [showMotto, setShowMotto] = useState<boolean>(false);
   const { firstLoad, setFirstLoad } = useFirstLoad();
 
@@ -38,7 +43,7 @@ const Home: React.FC = () => {
       {/* <Header videoLoaded={backgroundVideoLoaded} /> */}
       <main className={styles.main}>
         <motion.div
-          initial={{ opacity: 0, scale: 1 }}
+          initial={{ opacity: page != 'home' ? 0 : 1, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{
             duration: 0.2,
