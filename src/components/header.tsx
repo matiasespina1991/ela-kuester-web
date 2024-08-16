@@ -65,31 +65,32 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
         clearTimeout(timeoutId);
       };
     }
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     if (pathname === '/' && page != 'home') {
-      // Change logo class after a delay to trigger the transition
       const timeout = setTimeout(() => {
         setLogoClass(`${styles.logoInitial} ${styles.logoInitialVisible}`);
-      }, 500); // delay of 0.5 seconds
+      }, 500);
 
       return () => clearTimeout(timeout);
     }
-  }, []);
+  }, [pathname, page]);
 
   useEffect(() => {
-    // Change logo class to final after an additional delay
     const timeout = setTimeout(() => {
       setLogoClass(styles.logoFinal);
-      setHamburgerClass(styles.hamburgerVisible); // Mostrar el hamburger después de la animación del logo
-    }, 3500); // delay of 3 seconds
+      setHamburgerClass(styles.hamburgerVisible);
+    }, 3500);
 
     const timeout2 = setTimeout(() => {
       setFinishedLoading(true);
-    }, 6000); // delay of 4 seconds
+    }, 6000);
 
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(timeout2);
+    };
   }, []);
 
   const handleLinkClickMenuLink = () => {
@@ -105,7 +106,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
       >
         <div className={styles.navContent}>
           <Link
-            href="/"
+            href="/?page=home"
             className={`${styles.logo} ${logoClass} ${openHamburgerMenu ? styles.logoActive : ''}`}
           >
             <Stack whiteSpace={'pre-wrap'} direction="row">

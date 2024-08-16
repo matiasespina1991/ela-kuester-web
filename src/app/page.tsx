@@ -10,6 +10,7 @@ import { easeIn, easeOut, motion } from 'framer-motion';
 import { useFirstLoad } from '@/context/FirstLoadContext';
 import { getPortfolio } from '@/utils/getPortfolio';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
@@ -39,38 +40,35 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <>
-      {/* <Header videoLoaded={backgroundVideoLoaded} /> */}
-      <main className={styles.main}>
-        <motion.div
-          initial={{ opacity: page != 'home' ? 0 : 1, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.2,
-            delay: firstLoad ? 0 : 3.95,
-            ease: easeIn,
-          }}
-        >
-          <Typography className={styles.motto}>
-            LONDON BASED FASHION DESIGNER, STYLIST, AND ARTIST
-          </Typography>
-        </motion.div>
+    <main className={styles.main}>
+      <motion.div
+        initial={{ opacity: page != 'home' ? 0 : 1, scale: 1 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{
+          duration: 0.2,
+          delay: firstLoad ? 0 : 3.95,
+          ease: easeIn,
+        }}
+      >
+        <Typography className={styles.motto}>
+          LONDON BASED FASHION DESIGNER, STYLIST, AND ARTIST
+        </Typography>
+      </motion.div>
 
-        {videoUrl && (
-          <video
-            onLoadedData={handleBackgroundVideoLoaded}
-            preload="true"
-            className={styles.backgroundVideo}
-            autoPlay
-            loop
-            muted
-            playsInline
-          >
-            <source src={videoUrl} type="video/mp4" />
-          </video>
-        )}
-      </main>
-    </>
+      {videoUrl && (
+        <video
+          onLoadedData={handleBackgroundVideoLoaded}
+          preload="true"
+          className={styles.backgroundVideo}
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      )}
+    </main>
   );
 };
 
