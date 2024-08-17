@@ -6,25 +6,36 @@ import { db, collection, getDocs } from '../../utils/firebase';
 import { useEffect, useState } from 'react';
 import Header from '../../components/header';
 import { getAboutDescription } from '@/utils/getAboutDescription';
-import { use } from 'react';
-import { motion } from 'framer-motion';
-import { Box, Typography } from '@mui/material';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Box, Skeleton, Stack, Typography } from '@mui/material';
 import React from 'react';
 import RootLayout from '@/app/layout';
 import ClientLayout from '@/app/ClientLayout';
 
 const About = () => {
-  const [aboutDescription, setAboutDescription] = useState('');
+  const [aboutDescription, setAboutDescription] = useState<String | null>(
+    localStorage.getItem('aboutDescription') ?? null
+  );
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAboutDescription = async () => {
-      const aboutDescription = await getAboutDescription();
-
-      setAboutDescription(aboutDescription);
+    /// get about description from local storage
+    const aboutDescriptionFromLocalStorage =
+      localStorage.getItem('aboutDescription');
+    if (aboutDescriptionFromLocalStorage) {
+      setAboutDescription(JSON.parse(aboutDescriptionFromLocalStorage));
       setLoading(false);
-    };
-    fetchAboutDescription();
+    } else {
+      getAboutDescription().then((aboutDescription) => {
+        setAboutDescription(aboutDescription);
+        setLoading(false);
+
+        localStorage.setItem(
+          'aboutDescription',
+          JSON.stringify(aboutDescription)
+        );
+      });
+    }
   }, []);
 
   return (
@@ -34,34 +45,69 @@ const About = () => {
           sx={{
             justifyContent: 'center',
             px: '1.6rem',
-
+            alignItems: 'center',
             display: 'flex',
             flexDirection: 'column',
-            height: '100vh',
             width: '100%',
           }}
         >
-          <Box sx={{ pt: '1rem' }}></Box>
-
-          <motion.div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
+          <Box
+            sx={{
+              width: '100%',
+              maxWidth: '45rem',
+              position: 'relative',
+              marginBottom: '10rem',
             }}
-            animate={{ opacity: loading ? 0 : 1 }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                maxWidth: '45rem',
-                fontSize: '13pt',
-                lineHeight: '2rem',
-              }}
-            >
-              {aboutDescription}
-            </Typography>
-          </motion.div>
+            <Box position="absolute">
+              <AnimatePresence>
+                {!loading && (
+                  <motion.div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        maxWidth: '45rem',
+                        fontSize: '13pt',
+                        lineHeight: '2.1rem',
+                      }}
+                    >
+                      {aboutDescription && aboutDescription}
+                    </Typography>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Box>
+            <Box position="absolute" width={'100%'}>
+              <motion.div
+                style={{
+                  width: '100%',
+                  maxWidth: '45rem',
+                }}
+                initial={{ opacity: 1 }}
+                animate={{ opacity: loading ? 1 : 0 }}
+                transition={{ duration: loading ? 0.2 : 0.8, ease: 'easeOut' }}
+              >
+                <Stack marginTop="2px" gap={1.5}>
+                  <Skeleton variant="text" width="84%" />
+                  <Skeleton variant="text" width="94%" />
+                  <Skeleton variant="text" width="74%" />
+                  <Skeleton variant="text" width="96%" />
+                  <Skeleton variant="text" width="86%" />
+                  <Skeleton variant="text" width="15%" />
+                </Stack>
+              </motion.div>
+            </Box>
+          </Box>
         </Box>
       </main>
     </>

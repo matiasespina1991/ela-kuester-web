@@ -24,10 +24,18 @@ const Contact = () => {
   const [chipPosition, setChipPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    getContactData().then((contactData) => {
-      setContactData(contactData);
+    const contactDataFromLocalStorage = localStorage.getItem('contactData');
+    if (contactDataFromLocalStorage) {
+      setContactData(JSON.parse(contactDataFromLocalStorage));
       setLoading(false);
-    });
+    } else {
+      getContactData().then((contactData) => {
+        setContactData(contactData);
+        setLoading(false);
+
+        localStorage.setItem('contactData', JSON.stringify(contactData));
+      });
+    }
   }, []);
 
   const handleCopy = (text: string, event: React.MouseEvent) => {
