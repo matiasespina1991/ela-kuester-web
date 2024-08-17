@@ -63,7 +63,9 @@ const Contact = () => {
             style={{ opacity: 0 }}
             animate={{ opacity: loading ? 0 : 1 }}
           >
-            <Typography fontWeight="bold">{contactData.name}</Typography>
+            <Typography fontSize="13pt" fontWeight="bold">
+              {contactData.name}
+            </Typography>
           </motion.div>
           <motion.div
             style={{ opacity: 0 }}

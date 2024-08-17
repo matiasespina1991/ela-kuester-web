@@ -55,8 +55,8 @@ const About = () => {
               variant="h6"
               sx={{
                 maxWidth: '45rem',
-
-                lineHeight: '1.8rem',
+                fontSize: '13pt',
+                lineHeight: '2rem',
               }}
             >
               {aboutDescription}

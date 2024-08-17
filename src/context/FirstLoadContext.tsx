@@ -34,7 +34,7 @@ export const FirstLoadProvider: React.FC<{ children: ReactNode }> = ({
     if (!firstLoad) {
       setFirstLoad(true);
     }
-  }, []);
+  }, [firstLoad]);
 
   return (
     <FirstLoadContext.Provider value={{ firstLoad, setFirstLoad }}>
