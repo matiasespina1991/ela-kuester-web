@@ -14,7 +14,7 @@ import ClientLayout from '@/app/ClientLayout';
 
 const About = () => {
   const [aboutDescription, setAboutDescription] = useState<String | null>(
-    localStorage.getItem('aboutDescription') ?? null
+    localStorage.getItem('aboutDescription')
   );
   const [loading, setLoading] = useState(true);
 
@@ -56,7 +56,11 @@ const About = () => {
               width: '100%',
               maxWidth: '45rem',
               position: 'relative',
-              marginBottom: '10rem',
+              marginBottom: {
+                xs: '27rem',
+                sm: '12rem',
+                md: '12rem',
+              },
             }}
           >
             <Box position="absolute">
