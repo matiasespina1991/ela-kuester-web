@@ -33,13 +33,23 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
       : styles.hamburgerVisible
   );
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
+  const [elaKuesterTitle, setElaKuesterTitle] = useState<string>('');
 
-  // useEffect(() => {
-  //   if (pathname === '/' && page == 'home') {
-  //     setLogoClass(styles.logoFinal);
-  //     setHamburgerClass(styles.hamburgerVisible);
-  //   }
-  // }, [pathname, page]);
+  useEffect(() => {
+    const fullTitle = 'Ela Kuester';
+    let currentIndex = 0;
+
+    const intervalId = setInterval(() => {
+      if (currentIndex < fullTitle.length) {
+        setElaKuesterTitle((prev) => prev + fullTitle[currentIndex]);
+        currentIndex++;
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 800);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   useEffect(() => {
     const whiteRoutes = ['/'];
@@ -88,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setLogoClass(styles.logoFinal);
+      // setLogoClass(styles.logoFinal);
       setHamburgerClass(styles.hamburgerVisible);
     }, 3500);
 
@@ -119,39 +129,7 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             className={`${styles.logo} ${logoClass} ${openHamburgerMenu ? styles.logoActive : ''}`}
           >
             <Stack whiteSpace={'pre-wrap'} direction="row">
-              <motion.div>Ela </motion.div>
-              <Box position="relative">
-                {!finishedLoading && pathname === '/' && page !== 'home' ? (
-                  <>
-                    <motion.div
-                      style={{ position: 'absolute', top: 0, left: 0 }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0, 1] }}
-                      transition={{ delay: 1.6 }}
-                    >
-                      K
-                    </motion.div>
-                    <motion.div
-                      style={{ position: 'absolute', top: 0, left: 15.5 }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0, 1, 0] }}
-                      transition={{ delay: 1.6, duration: 1, ease: 'easeOut' }}
-                    >
-                      üster
-                    </motion.div>
-                    <motion.div
-                      style={{ position: 'absolute', top: 0, left: 15.5 }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 2.2, duration: 1, ease: 'easeIn' }}
-                    >
-                      uester
-                    </motion.div>
-                  </>
-                ) : (
-                  <>Kuester</>
-                )}
-              </Box>
+              <motion.div>{elaKuesterTitle}</motion.div>
             </Stack>
           </Link>
           <div className={`${styles.hamburger} ${hamburgerClass}`}>
