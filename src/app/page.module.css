@@ -65,6 +65,7 @@
 .contactInfo {
   text-decoration: underline 0.1em;
   text-decoration-color: rgba(0, 0, 0, 0);
+  text-decoration-thickness: 0.06rem;
 
   text-underline-offset: 0.2em;
   transition: text-decoration-color 200ms;

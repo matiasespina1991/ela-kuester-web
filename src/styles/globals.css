@@ -191,11 +191,6 @@
   margin: 0;
 }
 
-.hamburger-react[aria-expanded='false'] > div:first-child {
-  width: 20px !important;
-  transform: translateX(3px) !important;
-}
-
 html,
 body {
   max-width: 100vw;

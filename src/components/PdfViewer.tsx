@@ -97,7 +97,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ fileUrl }) => {
       >
         {Array.from(new Array(numPages), (el, index) => (
           <Page
-            className="LLLLL"
             width={window.innerWidth}
             // height={280}
             key={`page_${index + 1}`}

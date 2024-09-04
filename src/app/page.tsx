@@ -5,7 +5,7 @@ import { use, useEffect, useState } from 'react';
 import styles from './page.module.css';
 import { getHomePageVideo } from '../utils/getHomePageVideo';
 import Header from '../components/header';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { easeIn, easeOut, motion } from 'framer-motion';
 import { useFirstLoad } from '@/context/FirstLoadContext';
 import { getPortfolio } from '@/utils/getPortfolio';
@@ -41,6 +41,7 @@ const Home: React.FC = () => {
 
   return (
     <main className={styles.main}>
+      <Box height="4rem"></Box>
       <motion.div
         initial={{ opacity: page != 'home' ? 0 : 1, scale: 1 }}
         animate={{ opacity: 1, scale: 1 }}

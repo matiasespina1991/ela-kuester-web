@@ -58,7 +58,7 @@ const Contact = () => {
           spacing={3}
           direction={'column'}
           sx={{
-            pt: '40vh',
+            pt: '49vh',
             px: '1.6rem',
             display: 'flex',
             flexDirection: 'column',
@@ -67,14 +67,14 @@ const Contact = () => {
             width: '100%',
           }}
         >
-          <motion.div
+          {/* <motion.div
             style={{ opacity: 0 }}
             animate={{ opacity: loading ? 0 : 1 }}
           >
             <Typography fontSize="13pt" fontWeight="bold">
               {contactData.name}
             </Typography>
-          </motion.div>
+          </motion.div> */}
           <motion.div
             style={{ opacity: 0 }}
             animate={{ opacity: loading ? 0 : 1 }}
