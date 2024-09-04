@@ -1,20 +1,18 @@
-// src/components/header.tsx
-'use client';
-
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Spin as Hamburger } from 'hamburger-react';
 import styles from './header.module.css';
 
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Box, Stack } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
+import useTypewriter from '../utils/useTypewriter';
+import Typewriter from 'typewriter-effect';
 
 interface HeaderProps {
   videoLoaded: boolean;
 }
-
 const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
   const [openHamburgerMenu, setOpenHamburgerMenu] = useState<boolean>(false);
   const pathname = usePathname();
@@ -33,22 +31,26 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
       : styles.hamburgerVisible
   );
   const [finishedLoading, setFinishedLoading] = useState<boolean>(false);
-  const [elaKuesterTitle, setElaKuesterTitle] = useState<string>('');
+
+  const fadeIn = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
 
   useEffect(() => {
-    const fullTitle = 'Ela Kuester';
-    let currentIndex = 0;
+    const timeout = setTimeout(() => {
+      setLogoClass(styles.logoFinal);
+      setHamburgerClass(styles.hamburgerVisible);
+    }, 5500);
 
-    const intervalId = setInterval(() => {
-      if (currentIndex < fullTitle.length) {
-        setElaKuesterTitle((prev) => prev + fullTitle[currentIndex]);
-        currentIndex++;
-      } else {
-        clearInterval(intervalId);
-      }
-    }, 800);
+    const timeout2 = setTimeout(() => {
+      setFinishedLoading(true);
+    }, 8000);
 
-    return () => clearInterval(intervalId);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(timeout2);
+    };
   }, []);
 
   useEffect(() => {
@@ -96,22 +98,6 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     }
   }, [pathname, page]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      // setLogoClass(styles.logoFinal);
-      setHamburgerClass(styles.hamburgerVisible);
-    }, 3500);
-
-    const timeout2 = setTimeout(() => {
-      setFinishedLoading(true);
-    }, 6000);
-
-    return () => {
-      clearTimeout(timeout);
-      clearTimeout(timeout2);
-    };
-  }, []);
-
   const handleLinkClickMenuLink = () => {
     setTimeout(() => {
       setOpenHamburgerMenu(false);
@@ -129,7 +115,26 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
             className={`${styles.logo} ${logoClass} ${openHamburgerMenu ? styles.logoActive : ''}`}
           >
             <Stack whiteSpace={'pre-wrap'} direction="row">
-              <motion.div>{elaKuesterTitle}</motion.div>
+              <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+                <Typewriter
+                  onInit={(typewriter) => {
+                    typewriter
+                      .typeString('Ela Küster')
+                      .pauseFor(800)
+
+                      .deleteChars(5)
+                      .typeString('uester')
+                      .start();
+                  }}
+                  options={{
+                    deleteSpeed: 45,
+                    delay: 170,
+                    autoStart: true,
+                    cursor: '',
+                    loop: false,
+                  }}
+                />
+              </motion.div>
             </Stack>
           </Link>
           <div className={`${styles.hamburger} ${hamburgerClass}`}>

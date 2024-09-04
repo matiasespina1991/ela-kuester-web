@@ -38,8 +38,8 @@
 .logoInitial {
   position: relative;
   transform: translate(-50%, -50%) scale(3);
-  margin-left: 39.5vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
-  margin-top: 46vh; /* Ajusta el margen superior para centrar verticalmente */
+  margin-left: 45.5vw; /* Ajusta el margen izquierdo para centrar horizontalmente */
+  margin-top: 47vh; /* Ajusta el margen superior para centrar verticalmente */
   transition:
     transform 0.5s ease-in-out,
     margin-left 0.5s ease-in-out,
@@ -83,7 +83,7 @@
   width: max-content;
   text-decoration: none;
   z-index: 1000;
-  color: var(--header-color, black);
+  color: #aeafb1;
   text-decoration: none !important;
 }
 

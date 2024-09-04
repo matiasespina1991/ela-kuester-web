@@ -46,7 +46,7 @@ const Home: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{
           duration: 0.2,
-          delay: firstLoad ? 0 : 3.95,
+          delay: firstLoad ? 0 : 5.75,
           ease: easeIn,
         }}
       >
