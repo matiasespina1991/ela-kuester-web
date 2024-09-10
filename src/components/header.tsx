@@ -41,15 +41,15 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
     const timeout = setTimeout(() => {
       setLogoClass(styles.logoFinal);
       setHamburgerClass(styles.hamburgerVisible);
-    }, 5500);
+    }, 6000);
 
-    const timeout2 = setTimeout(() => {
-      setFinishedLoading(true);
-    }, 8000);
+    // const timeout2 = setTimeout(() => {
+    //   setFinishedLoading(true);
+    // }, 8000);
 
     return () => {
       clearTimeout(timeout);
-      clearTimeout(timeout2);
+      // clearTimeout(timeout2);
     };
   }, []);
 
@@ -116,24 +116,30 @@ const Header: React.FC<HeaderProps> = ({ videoLoaded }) => {
           >
             <Stack whiteSpace={'pre-wrap'} direction="row">
               <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <Typewriter
-                  onInit={(typewriter) => {
-                    typewriter
-                      .typeString('Ela Küster')
-                      .pauseFor(800)
+                {page === 'home' ? (
+                  <>Ela Kuester</>
+                ) : (
+                  <>
+                    <Typewriter
+                      onInit={(typewriter) => {
+                        typewriter
+                          .typeString('Ela Küster')
+                          .pauseFor(800)
 
-                      .deleteChars(5)
-                      .typeString('uester')
-                      .start();
-                  }}
-                  options={{
-                    deleteSpeed: 45,
-                    delay: 170,
-                    autoStart: true,
-                    cursor: '',
-                    loop: false,
-                  }}
-                />
+                          .deleteChars(5)
+                          .typeString('uester')
+                          .start();
+                      }}
+                      options={{
+                        deleteSpeed: 45,
+                        delay: 170,
+                        autoStart: true,
+                        cursor: '',
+                        loop: false,
+                      }}
+                    />
+                  </>
+                )}
               </motion.div>
             </Stack>
           </Link>

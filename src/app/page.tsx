@@ -14,14 +14,10 @@ import { Suspense } from 'react';
 
 const Home: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>('');
-  const [backgroundVideoLoaded, setBackgroundVideoLoaded] =
-    useState<boolean>(false);
 
   const searchParams = useSearchParams();
 
   const page = searchParams?.get('page');
-  const [showMotto, setShowMotto] = useState<boolean>(false);
-  const { firstLoad, setFirstLoad } = useFirstLoad();
 
   useEffect(() => {
     const fetchVideo = async () => {
@@ -29,14 +25,6 @@ const Home: React.FC = () => {
       setVideoUrl(url);
     };
     fetchVideo();
-  }, []);
-
-  const handleBackgroundVideoLoaded = () => {
-    setBackgroundVideoLoaded(true);
-  };
-
-  useEffect(() => {
-    setShowMotto(true);
   }, []);
 
   return (
@@ -47,7 +35,7 @@ const Home: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{
           duration: 0.2,
-          delay: firstLoad ? 0 : 5.75,
+          delay: 6.45,
           ease: easeIn,
         }}
       >
@@ -56,7 +44,7 @@ const Home: React.FC = () => {
         </Typography>
       </motion.div>
 
-      {videoUrl && (
+      {/* {videoUrl && (
         <video
           onLoadedData={handleBackgroundVideoLoaded}
           preload="true"
@@ -68,7 +56,7 @@ const Home: React.FC = () => {
         >
           <source src={videoUrl} type="video/mp4" />
         </video>
-      )}
+      )} */}
     </main>
   );
 };
